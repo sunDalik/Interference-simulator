@@ -1,0 +1,31 @@
+
+.button {
+    font-size: 30px;
+    color: black;
+    padding: 12px;
+    text-decoration: none;
+    border: 1px solid black;
+}
+
+.button:hover {
+    text-decoration: underline;
+    /*dunno yet*/
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-column-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.top-margin {
+    margin-top: 200px;
+}
