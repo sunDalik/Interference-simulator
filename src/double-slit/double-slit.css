@@ -1,17 +1,22 @@
 @import "../common.css";
 
-.double-slit_element {
+.schema svg {
+    position: absolute;
 }
 
 #light-source {
+    left: 20vw;
 }
 
 #two-slits {
+    left: 40vw;
 }
 
 #screen {
+    left: 60vw;
 
 }
 
 #interference-pattern {
+    left: 80vw;
 }
