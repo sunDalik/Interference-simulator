@@ -1,7 +1,12 @@
 @import "../common.css";
 
+.schema {
+    margin-top: 40px;
+}
+
 .schema svg {
     position: absolute;
+    cursor: move;
 }
 
 #light-source {

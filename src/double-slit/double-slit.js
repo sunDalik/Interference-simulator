@@ -6,15 +6,19 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function makeDraggableHorizontally(element) {
+    let posDiff = 0, pos = 0;
     element.onmousedown = mouseDown;
     document.onmouseup = mouseUp;
 
-    function mouseDown() {
+    function mouseDown(e) {
         document.onmousemove = dragElement;
+        pos = e.clientX;
     }
 
     function dragElement(e) {
-        element.style.left = e.clientX + 'px'; //doesn't work yet
+        posDiff = e.clientX - pos;
+        pos = e.clientX;
+        element.style.left = element.getBoundingClientRect().left + posDiff + "px";
     }
 
     function mouseUp() {
