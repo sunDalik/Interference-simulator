@@ -23,11 +23,12 @@
 }
 
 #interference-pattern {
-    left: 80vw;
+    left: 75vw;
 }
 
 #interference-plot{
-    left: 85vw;
-    transform: rotate(90deg);
-    transform-origin: 100px 100px;
+    margin-top: 0.5vh;
+    left: 77vw;
+    border: 2px solid black;
+    padding: 0 10px;
 }
