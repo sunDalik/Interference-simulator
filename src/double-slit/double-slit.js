@@ -53,13 +53,14 @@ function calculateInterferencePlot() {
     let amplitude = 100;
     let rarity = 1;
     let freq = 0.1;
+    let step = 0.5;
     let T = calculatePeriod(getL(), getD(), getLambda()); // interference period
-    for (let i = 0; i <= 100; i++) {
+    for (let i = 0; i <= 100; i += step) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         line.setAttribute('y1', i * rarity);
         line.setAttribute('x1', Math.cos(freq * Math.PI * i / T) ** 2 * amplitude);
-        line.setAttribute('y2', (i + 1) * rarity);
-        line.setAttribute('x2', Math.cos(freq * Math.PI * (i + 1) / T) ** 2 * amplitude);
+        line.setAttribute('y2', (i + step) * rarity);
+        line.setAttribute('x2', Math.cos(freq * Math.PI * (i + step) / T) ** 2 * amplitude);
         line.setAttribute('stroke', 'black');
         line.setAttribute('stroke-width', '0.7');
 
@@ -72,11 +73,12 @@ function calculateInterferencePattern() {
     while (svg.firstChild) {
         svg.removeChild(svg.firstChild);
     }
+    let freq = 0.1;
     let T = calculatePeriod(getL(), getD(), getLambda()); // interference period
-    for (let i = 0; i <= 100; i+=0.5) {
+    for (let i = 0; i <= 100; i += 0.5) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
         line.setAttribute('d', `M 0 ${i} h 100`);
-        const intensity = Math.cos(Math.PI * i / T) ** 2    ;
+        const intensity = Math.cos(freq * Math.PI * i / T) ** 2;
         line.setAttribute('stroke', `rgba(255, 255, 255, ${intensity})`);
         line.setAttribute('stroke-width', '1');
 
@@ -85,9 +87,9 @@ function calculateInterferencePattern() {
 }
 
 function changeInfo() {
-    document.getElementById("L").innerText = getL() + " m";
-    document.getElementById("d").innerText = getD();
-    document.getElementById("lambda").innerText = getLambda();
+    document.getElementById("L").innerText = getL().toFixed(2) + " m";
+    document.getElementById("d").innerText = (getD() * 10 ** 3).toFixed(2) + " mm";
+    document.getElementById("lambda").innerText = (getLambda() * 10 ** 9).toFixed(0) + " nm";
 }
 
 function calculatePeriod(L, d, lambda) {
@@ -101,7 +103,7 @@ function getL() {
 }
 
 function getD() {
-    return 3 * 10 ** -2;
+    return 3 * 10 ** -4;
 }
 
 function getLambda() {
