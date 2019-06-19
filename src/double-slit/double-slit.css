@@ -25,3 +25,9 @@
 #interference-pattern {
     left: 80vw;
 }
+
+#interference-plot{
+    left: 85vw;
+    transform: rotate(90deg);
+    transform-origin: 100px 100px;
+}
