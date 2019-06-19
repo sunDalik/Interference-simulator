@@ -9,6 +9,7 @@ window.addEventListener('DOMContentLoaded', () => {
     makeDraggableHorizontally(document.getElementById("interference-pattern"));
     makeDraggableHorizontally(document.getElementById("interference-plot"));
     calculateInterferencePlot();
+    calculateInterferencePattern();
     changeInfo();
 });
 
@@ -35,6 +36,7 @@ function makeDraggableHorizontally(element) {
             element.style.left = newPositionL + "px";
             changeInfo();
             calculateInterferencePlot();
+            calculateInterferencePattern();
         }
     }
 
@@ -49,17 +51,34 @@ function calculateInterferencePlot() {
         svg.removeChild(svg.firstChild);
     }
     let amplitude = 100;
-    let rarity = 1; // point spacing
-    let freq = 0.1; // angular frequency
+    let rarity = 1;
+    let freq = 0.1;
     let T = calculatePeriod(getL(), getD(), getLambda()); // interference period
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i <= 100; i++) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         line.setAttribute('y1', i * rarity);
         line.setAttribute('x1', Math.cos(freq * Math.PI * i / T) ** 2 * amplitude);
         line.setAttribute('y2', (i + 1) * rarity);
         line.setAttribute('x2', Math.cos(freq * Math.PI * (i + 1) / T) ** 2 * amplitude);
         line.setAttribute('stroke', 'black');
-        line.setAttribute('stroke-width', '1'); //might change later
+        line.setAttribute('stroke-width', '0.7');
+
+        svg.appendChild(line);
+    }
+}
+
+function calculateInterferencePattern() {
+    let svg = document.getElementById('interference-pattern');
+    while (svg.firstChild) {
+        svg.removeChild(svg.firstChild);
+    }
+    let T = calculatePeriod(getL(), getD(), getLambda()); // interference period
+    for (let i = 0; i <= 100; i+=0.5) {
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        line.setAttribute('d', `M 0 ${i} h 100`);
+        const intensity = Math.cos(Math.PI * i / T) ** 2;
+        line.setAttribute('stroke', `rgba(255, 255, 255, ${intensity})`);
+        line.setAttribute('stroke-width', '1');
 
         svg.appendChild(line);
     }
