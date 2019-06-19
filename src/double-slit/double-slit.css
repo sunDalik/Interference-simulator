@@ -30,6 +30,7 @@
 #interference-plot {
     margin-top: 0.5vh;
     left: 80vw;
+    background: white;
     border: 2px solid black;
     padding: 0 10px;
 }

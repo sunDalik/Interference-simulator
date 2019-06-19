@@ -76,7 +76,7 @@ function calculateInterferencePattern() {
     for (let i = 0; i <= 100; i+=0.5) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
         line.setAttribute('d', `M 0 ${i} h 100`);
-        const intensity = Math.cos(Math.PI * i / T) ** 2;
+        const intensity = Math.cos(Math.PI * i / T) ** 2    ;
         line.setAttribute('stroke', `rgba(255, 255, 255, ${intensity})`);
         line.setAttribute('stroke-width', '1');
 
@@ -101,7 +101,7 @@ function getL() {
 }
 
 function getD() {
-    return 400 * 10 ** -9;
+    return 3 * 10 ** -2;
 }
 
 function getLambda() {
