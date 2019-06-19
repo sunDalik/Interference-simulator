@@ -26,9 +26,13 @@
     left: 75vw;
 }
 
-#interference-plot{
+#interference-plot {
     margin-top: 0.5vh;
-    left: 77vw;
+    left: 80vw;
     border: 2px solid black;
     padding: 0 10px;
+}
+
+.info {
+    margin-top: 590px;
 }
