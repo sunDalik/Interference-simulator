@@ -55,11 +55,11 @@ function calculateInterferencePlot() {
     let freq = 0.1;
     let step = 0.5;
     let T = calculatePeriod(getL(), getD(), getLambda()); // interference period
-    for (let i = 0; i <= 100; i += step) {
+    for (let i = -50; i <= 50; i += step) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        line.setAttribute('y1', i * rarity);
+        line.setAttribute('y1', i + 50 * rarity);
         line.setAttribute('x1', Math.cos(freq * Math.PI * i / T / 10 ** 2) ** 2 * amplitude);
-        line.setAttribute('y2', (i + step) * rarity);
+        line.setAttribute('y2', (i + 50 + step) * rarity);
         line.setAttribute('x2', Math.cos(freq * Math.PI * (i + step) / T / 10 ** 2) ** 2 * amplitude);
         line.setAttribute('stroke', 'black');
         line.setAttribute('stroke-width', '0.7');
@@ -75,9 +75,9 @@ function calculateInterferencePattern() {
     }
     let freq = 0.1;
     let T = calculatePeriod(getL(), getD(), getLambda()); // interference period
-    for (let i = 0; i <= 100; i += 0.5) {
+    for (let i = -50; i <= 50; i += 0.5) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        line.setAttribute('d', `M 0 ${i} h 100`);
+        line.setAttribute('d', `M 0 ${i + 50} h 100`);
         const intensity = Math.cos(freq * Math.PI * i / T / 10 ** 2) ** 2;
         line.setAttribute('stroke', `rgba(255, 255, 255, ${intensity})`);
         line.setAttribute('stroke-width', '1');
