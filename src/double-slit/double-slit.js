@@ -58,9 +58,9 @@ function calculateInterferencePlot() {
     for (let i = 0; i <= 100; i += step) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         line.setAttribute('y1', i * rarity);
-        line.setAttribute('x1', Math.cos(freq * Math.PI * i / T) ** 2 * amplitude);
+        line.setAttribute('x1', Math.cos(freq * Math.PI * i / T / 10 ** 2) ** 2 * amplitude);
         line.setAttribute('y2', (i + step) * rarity);
-        line.setAttribute('x2', Math.cos(freq * Math.PI * (i + step) / T) ** 2 * amplitude);
+        line.setAttribute('x2', Math.cos(freq * Math.PI * (i + step) / T / 10 ** 2) ** 2 * amplitude);
         line.setAttribute('stroke', 'black');
         line.setAttribute('stroke-width', '0.7');
 
@@ -78,7 +78,7 @@ function calculateInterferencePattern() {
     for (let i = 0; i <= 100; i += 0.5) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
         line.setAttribute('d', `M 0 ${i} h 100`);
-        const intensity = Math.cos(freq * Math.PI * i / T) ** 2;
+        const intensity = Math.cos(freq * Math.PI * i / T / 10 ** 2) ** 2;
         line.setAttribute('stroke', `rgba(255, 255, 255, ${intensity})`);
         line.setAttribute('stroke-width', '1');
 
@@ -103,7 +103,7 @@ function getL() {
 }
 
 function getD() {
-    return 3 * 10 ** -4;
+    return 3 * 10 ** -5;
 }
 
 function getLambda() {
