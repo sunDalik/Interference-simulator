@@ -4,13 +4,15 @@ var d;
 
 window.addEventListener('DOMContentLoaded', () => {
     makeDraggableHorizontally(document.getElementById("light-source"));
-    makeDraggableHorizontally(document.getElementById("two-slits"));
+    //makeDraggableHorizontally(document.getElementById("two-slits"));
     makeDraggableHorizontally(document.getElementById("screen"));
     makeDraggableHorizontally(document.getElementById("interference-pattern"));
     makeDraggableHorizontally(document.getElementById("interference-plot"));
     calculateInterferencePlot();
     calculateInterferencePattern();
     changeInfo();
+    makeSlitDraggable(document.getElementById("top-slit_dragger"));
+    makeSlitDraggable(document.getElementById("bottom-slit_dragger"));
 });
 
 function makeDraggableHorizontally(element) {
@@ -54,12 +56,13 @@ function calculateInterferencePlot() {
     let rarity = 1;
     let freq = 0.1;
     let step = 0.5;
+    let center = 50;
     let T = calculatePeriod(getL(), getD(), getLambda()); // interference period
-    for (let i = -50; i <= 50; i += step) {
+    for (let i = -center; i <= (100 - center); i += step) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        line.setAttribute('y1', i + 50 * rarity);
+        line.setAttribute('y1', i + center * rarity);
         line.setAttribute('x1', Math.cos(freq * Math.PI * i / T / 10 ** 2) ** 2 * amplitude);
-        line.setAttribute('y2', (i + 50 + step) * rarity);
+        line.setAttribute('y2', (i + center + step) * rarity);
         line.setAttribute('x2', Math.cos(freq * Math.PI * (i + step) / T / 10 ** 2) ** 2 * amplitude);
         line.setAttribute('stroke', 'black');
         line.setAttribute('stroke-width', '0.7');
@@ -74,10 +77,11 @@ function calculateInterferencePattern() {
         svg.removeChild(svg.firstChild);
     }
     let freq = 0.1;
+    let center = 50;
     let T = calculatePeriod(getL(), getD(), getLambda()); // interference period
-    for (let i = -50; i <= 50; i += 0.5) {
+    for (let i = -center; i <= 100 - center; i += 0.5) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        line.setAttribute('d', `M 0 ${i + 50} h 100`);
+        line.setAttribute('d', `M 0 ${i + center} h 100`);
         const intensity = Math.cos(freq * Math.PI * i / T / 10 ** 2) ** 2;
         line.setAttribute('stroke', `rgba(255, 255, 255, ${intensity})`);
         line.setAttribute('stroke-width', '1');
@@ -92,6 +96,40 @@ function changeInfo() {
     document.getElementById("lambda").innerText = (getLambda() * 10 ** 9).toFixed(0) + " nm";
 }
 
+function makeSlitDraggable(element) {
+    let posDiff = 0, pos = 0;
+    element.onmousedown = mouseDown;
+    document.onmouseup = mouseUp;
+
+    function mouseDown(e) {
+        document.onmousemove = dragElement;
+        pos = e.clientY;
+    }
+
+    function dragElement(e) {
+        posDiff = e.clientY - pos;
+        pos = e.clientY;
+        const newPosition = Number(element.getAttribute('cy')) + posDiff;
+        if (newPosition > 50 && newPosition < 350 &&
+            (element.id === 'top-slit_dragger' && document.getElementById('bottom-slit_dragger').getAttribute('cy') - newPosition > 30 ||
+                element.id === "bottom-slit_dragger" && newPosition - document.getElementById('top-slit_dragger').getAttribute('cy') > 30)) {
+            element.setAttribute('cy', newPosition);
+            if (element.id === "top-slit_dragger") {
+                document.getElementById("top-slit").setAttribute('y', newPosition - 4);
+            } else if (element.id === "bottom-slit_dragger") {
+                document.getElementById("bottom-slit").setAttribute('y', newPosition - 4);
+            }
+            changeInfo();
+            calculateInterferencePlot();
+            calculateInterferencePattern();
+        }
+    }
+
+    function mouseUp() {
+        document.onmousemove = null;
+    }
+}
+
 function calculatePeriod(L, d, lambda) {
     return L / d * lambda;
 }
@@ -103,7 +141,8 @@ function getL() {
 }
 
 function getD() {
-    return 3 * 10 ** -5;
+    return (document.getElementById('bottom-slit_dragger').getAttribute('cy') -
+        document.getElementById('top-slit_dragger').getAttribute('cy')) / 10 ** 5;
 }
 
 function getLambda() {

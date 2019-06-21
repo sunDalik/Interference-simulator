@@ -12,23 +12,26 @@
     <a class="button" href="../../index.html">Main menu</a>
 </div>
 <div class="schema">
-    <svg xmlns="http://www.w3.org/2000/svg" id="light-source" width="50px" height="70vh"
+    <svg xmlns="http://www.w3.org/2000/svg" id="light-source" width="50px" height="400px"
          viewBox="0 0 100 100" preserveAspectRatio="none">
         <path d="M 40,0 v 49 h 20 v -49 Z M 40,100 v -49 h 20 v 49 Z" fill="black"></path>
     </svg>
-    <svg xmlns="http://www.w3.org/2000/svg" id="two-slits" width="50px" height="70vh"
-         viewBox="0 0 100 100" preserveAspectRatio="none">
-        <path d="M 40,0 v 29 h 20 v -29 Z M 40,31 v 38 h 20 v -38 Z M 40,71 v 29 h 20 v -29 Z" fill="black"></path>
+    <svg xmlns="http://www.w3.org/2000/svg" id="two-slits" width="50px" height="400px">
+        <rect x="20" y="0" height="400" width="10" fill="black"></rect>
+        <rect id="top-slit" x="0" y="116" height="8" width="100" fill="white"></rect>
+        <circle id="top-slit_dragger" class="slit-draggers" cx="25" cy="120" r="20" fill="rgba(0,0,0,0)"></circle>
+        <rect id="bottom-slit" x="0" y="276" height="8" width="100" fill="white"></rect>
+        <circle id="bottom-slit_dragger" class="slit-draggers" cx="25" cy="280" r="20" fill="rgba(0,0,0,0)"></circle>
     </svg>
-    <svg xmlns="http://www.w3.org/2000/svg" id="screen" width="50px" height="70vh"
+    <svg xmlns="http://www.w3.org/2000/svg" id="screen" width="50px" height="400px"
          viewBox="0 0 100 100" preserveAspectRatio="none">
         <path d="M 40,0 v 100 h 20 v -100 Z" fill="black"></path>
 
     </svg>
-    <svg xmlns="http://www.w3.org/2000/svg" id="interference-pattern" width="50px" height="70vh"
+    <svg xmlns="http://www.w3.org/2000/svg" id="interference-pattern" width="50px" height="400px"
          viewBox="0 0 100 100" preserveAspectRatio="none">
     </svg>
-    <svg xmlns="http://www.w3.org/2000/svg" id="interference-plot" width="60px" height="68vh"
+    <svg xmlns="http://www.w3.org/2000/svg" id="interference-plot" width="60px" height="390px"
          viewBox="0 0 100 100" preserveAspectRatio="none">
     </svg>
 </div>

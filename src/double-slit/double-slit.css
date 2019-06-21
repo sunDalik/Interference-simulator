@@ -13,7 +13,7 @@
     left: 20vw;
 }
 
-#two-slits {
+#two-slits, #two-slits_draggers {
     left: 40vw;
 }
 
@@ -37,4 +37,8 @@
 
 .info {
     margin-top: 590px;
+}
+
+.slit-draggers:hover {
+    fill: rgba(94, 182, 255, 0.66)
 }
