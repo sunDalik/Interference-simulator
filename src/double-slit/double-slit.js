@@ -1,10 +1,8 @@
-var lambda;
-var L;
-var d;
+var dragState = 0; //1 if two-slits is being dragged; 2 if top-slit; 3 if bottom-slit; 0 if none
 
 window.addEventListener('DOMContentLoaded', () => {
     makeDraggableHorizontally(document.getElementById("light-source"));
-    //makeDraggableHorizontally(document.getElementById("two-slits"));
+    makeDraggableHorizontally(document.getElementById("two-slits"));
     makeDraggableHorizontally(document.getElementById("screen"));
     makeDraggableHorizontally(document.getElementById("interference-pattern"));
     makeDraggableHorizontally(document.getElementById("interference-plot"));
@@ -13,6 +11,38 @@ window.addEventListener('DOMContentLoaded', () => {
     changeInfo();
     makeSlitDraggable(document.getElementById("top-slit_dragger"));
     makeSlitDraggable(document.getElementById("bottom-slit_dragger"));
+    document.getElementById("two-slits").addEventListener("mouseover", e => {
+        if ((e.target.id === "two-slits_obstacle" || e.target.id === "two-slits") && dragState === 0 || dragState === 1) {
+            document.getElementById("two-slits_obstacle").style.fill = "#828282";
+        } else {
+            document.getElementById("two-slits_obstacle").style.fill = "black";
+        }
+    });
+    document.getElementById("two-slits").addEventListener("mouseout", () => {
+        if (dragState !== 1) {
+            document.getElementById("two-slits_obstacle").style.fill = "black";
+        }
+    });
+    document.getElementById("top-slit_dragger").addEventListener("mouseover", () => {
+        if (dragState === 0 || dragState === 2) {
+            document.getElementById("top-slit_dragger").style.fill = "rgba(94, 182, 255, 0.66)";
+        }
+    });
+    document.getElementById("top-slit_dragger").addEventListener("mouseout", () => {
+        if (dragState === 0 || dragState === 2) {
+            document.getElementById("top-slit_dragger").style.fill = "rgba(0, 0, 0, 0)";
+        }
+    });
+    document.getElementById("bottom-slit_dragger").addEventListener("mouseover", () => {
+        if (dragState === 0 || dragState === 3) {
+            document.getElementById("bottom-slit_dragger").style.fill = "rgba(94, 182, 255, 0.66)";
+        }
+    });
+    document.getElementById("bottom-slit_dragger").addEventListener("mouseout", () => {
+        if (dragState === 0 || dragState === 3) {
+            document.getElementById("bottom-slit_dragger").style.fill = "rgba(0, 0, 0, 0)";
+        }
+    });
 });
 
 function makeDraggableHorizontally(element) {
@@ -21,8 +51,11 @@ function makeDraggableHorizontally(element) {
     document.onmouseup = mouseUp;
 
     function mouseDown(e) {
-        document.onmousemove = dragElement;
-        pos = e.clientX;
+        if (e.target.id !== "top-slit_dragger" && e.target.id !== "bottom-slit_dragger") {
+            dragState = 1;
+            document.onmousemove = dragElement;
+            pos = e.clientX;
+        }
     }
 
     function dragElement(e) {
@@ -40,10 +73,6 @@ function makeDraggableHorizontally(element) {
             calculateInterferencePlot();
             calculateInterferencePattern();
         }
-    }
-
-    function mouseUp() {
-        document.onmousemove = null;
     }
 }
 
@@ -66,7 +95,6 @@ function calculateInterferencePlot() {
         line.setAttribute('x2', Math.cos(freq * Math.PI * (i + step) / T / 10 ** 2) ** 2 * amplitude);
         line.setAttribute('stroke', 'black');
         line.setAttribute('stroke-width', '0.7');
-
         svg.appendChild(line);
     }
 }
@@ -85,7 +113,6 @@ function calculateInterferencePattern() {
         const intensity = Math.cos(freq * Math.PI * i / T / 10 ** 2) ** 2;
         line.setAttribute('stroke', `rgba(255, 255, 255, ${intensity})`);
         line.setAttribute('stroke-width', '1');
-
         svg.appendChild(line);
     }
 }
@@ -102,6 +129,7 @@ function makeSlitDraggable(element) {
     document.onmouseup = mouseUp;
 
     function mouseDown(e) {
+        dragState = element.id === "top-slit_dragger" ? 2 : 3;
         document.onmousemove = dragElement;
         pos = e.clientY;
     }
@@ -124,10 +152,6 @@ function makeSlitDraggable(element) {
             calculateInterferencePattern();
         }
     }
-
-    function mouseUp() {
-        document.onmousemove = null;
-    }
 }
 
 function calculatePeriod(L, d, lambda) {
@@ -147,4 +171,10 @@ function getD() {
 
 function getLambda() {
     return 400 * 10 ** -9;
+}
+
+function mouseUp() {
+    document.onmousemove = null;
+    dragState = 0;
+    document.getElementById("two-slits_obstacle").style.fill = "black";
 }

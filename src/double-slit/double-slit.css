@@ -19,7 +19,6 @@
 
 #screen {
     left: 60vw;
-
 }
 
 #interference-pattern {
@@ -37,8 +36,4 @@
 
 .info {
     margin-top: 590px;
-}
-
-.slit-draggers:hover {
-    fill: rgba(94, 182, 255, 0.66)
 }
