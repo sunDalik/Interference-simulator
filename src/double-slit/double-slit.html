@@ -35,13 +35,18 @@
          viewBox="0 0 100 100" preserveAspectRatio="none">
     </svg>
     <svg xmlns="http://www.w3.org/2000/svg" id="central-line" height="4px">
-        <line id="central-line__line" stroke-dasharray="20" stroke-width="4" x1="0" y1="2" x2="0" y2="2" stroke="gray"></line>
+        <line id="central-line__line" stroke-dasharray="20" stroke-width="4" x1="0" y1="2" x2="0" y2="2"
+              stroke="gray"></line>
     </svg>
 </div>
 <div class="info">
-    L = <span id="L"></span> <br>
-    d = <span id="d"></span> <br>
-    Lambda = <span id="lambda"></span>
+    <label>
+        Adjust wavelength <br>
+        <input id="lambda-slider" type="range" min="380" max="780">
+    </label>
+    <div> L = <span id="L"></span></div>
+    <div> d = <span id="d"></span></div>
+    <div> Lambda = <span id="lambda"></span></div>
 </div>
 </body>
 </html>

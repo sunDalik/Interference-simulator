@@ -12,6 +12,10 @@ window.addEventListener('DOMContentLoaded', () => {
     redraw();
     makeSlitDraggable(document.getElementById("top-slit_dragger"));
     makeSlitDraggable(document.getElementById("bottom-slit_dragger"));
+    document.getElementById('lambda-slider').addEventListener('input', () => {
+        changeInfo();
+        redraw();
+    });
     document.getElementById("two-slits").addEventListener("mouseover", e => {
         if ((e.target.id === "two-slits_obstacle" || e.target.id === "two-slits") && dragState === 0 || dragState === 1) {
             document.getElementById("two-slits_obstacle").style.fill = "#828282";
@@ -100,13 +104,14 @@ function drawInterferencePattern() {
     let svg = document.getElementById('interference-pattern');
     removeAllChildren(svg);
     let freq = 0.1;
+    let step = 0.5;
     let center = getSlitsCenterRelativeToGraph();
     let T = calculatePeriod(getL(), getD(), getLambda());
-    for (let i = -center; i <= 100 - center; i += 0.5) {
+    for (let i = -center; i <= 100 - center; i += step) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
         line.setAttribute('d', `M 0 ${i + center} h 100`);
-        const intensity = Math.cos(freq * Math.PI * i / T / ResScale) ** 2;
-        line.setAttribute('stroke', `rgba(255, 255, 255, ${intensity})`);
+        line.setAttribute('opacity', Math.cos(freq * Math.PI * i / T / ResScale) ** 2);
+        line.setAttribute('stroke', getColorByWavelength(getLambdaNM()));
         line.setAttribute('stroke-width', '1');
         svg.appendChild(line);
     }
@@ -115,7 +120,7 @@ function drawInterferencePattern() {
 function changeInfo() {
     document.getElementById("L").innerText = getL().toFixed(2) + " m";
     document.getElementById("d").innerText = (getD() * 10 ** 3).toFixed(2) + " mm";
-    document.getElementById("lambda").innerText = (getLambda() * 10 ** 9).toFixed(0) + " nm";
+    document.getElementById("lambda").innerText = getLambdaNM() + " nm";
 }
 
 function makeSlitDraggable(element) {
@@ -173,7 +178,11 @@ function getD() {
 }
 
 function getLambda() {
-    return 400 * 10 ** -9;
+    return document.getElementById('lambda-slider').value * 10 ** -9;
+}
+
+function getLambdaNM() {
+    return document.getElementById('lambda-slider').value;
 }
 
 function mouseUp() {
@@ -195,14 +204,67 @@ function getSlitsCenter() {
 }
 
 function getSlitsCenterRelativeToGraph() {
-    console.log(getSlitsCenter());
-    console.log(document.getElementById('interference-graph').getBoundingClientRect().top);
-    console.log(document.getElementById('interference-graph').getBoundingClientRect().height);
-    return (getSlitsCenter() - document.getElementById('interference-graph').getBoundingClientRect().top) / document.getElementById('interference-graph').getBoundingClientRect().height * 100;
+    return (getSlitsCenter() - document.getElementById('interference-graph').getBoundingClientRect().top) /
+        document.getElementById('interference-graph').getBoundingClientRect().height * 100;
 }
 
 function removeAllChildren(parent) {
     while (parent.hasChildNodes()) {
         parent.removeChild(parent.firstChild);
     }
+}
+
+function getColorByWavelength(wavelength) {
+    let r, g, b, alpha;
+    if (wavelength >= 380 && wavelength < 440) {
+        r = -(wavelength - 440) / (440 - 380);
+        g = 0.0;
+        b = 1.0;
+    }
+    else if (wavelength >= 440 && wavelength < 490) {
+        r = 0.0;
+        g = (wavelength - 440) / (490 - 440);
+        b = 1.0;
+    }
+    else if (wavelength >= 490 && wavelength < 510) {
+        r = 0.0;
+        g = 1.0;
+        b = -(wavelength - 510) / (510 - 490);
+    }
+    else if (wavelength >= 510 && wavelength < 580) {
+        r = (wavelength - 510) / (580 - 510);
+        g = 1.0;
+        b = 0.0;
+    }
+    else if (wavelength >= 580 && wavelength < 645) {
+        r = 1.0;
+        g = -(wavelength - 645) / (645 - 580);
+        b = 0.0;
+    }
+    else if (wavelength >= 645 && wavelength < 781) {
+        r = 1.0;
+        g = 0.0;
+        b = 0.0;
+    }
+    else {
+        r = 0.0;
+        g = 0.0;
+        b = 0.0;
+    }
+
+    if (wavelength >= 380 && wavelength < 420)
+        alpha = 0.3 + 0.7 * (wavelength - 380) / (420 - 380);
+    else if (wavelength >= 420 && wavelength < 701)
+        alpha = 1.0;
+    else if (wavelength >= 701 && wavelength < 781)
+        alpha = 0.3 + 0.7 * (780 - wavelength) / (780 - 700);
+    else
+        alpha = 0.0;
+
+    const gamma = 0.80;
+    r = r > 0 ? 255 * Math.pow(r * alpha, gamma) : 0;
+    g = g > 0 ? 255 * Math.pow(g * alpha, gamma) : 0;
+    b = b > 0 ? 255 * Math.pow(b * alpha, gamma) : 0;
+
+    return `rgb(${r}, ${g}, ${b})`;
 }
