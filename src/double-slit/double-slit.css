@@ -22,12 +22,12 @@
 }
 
 #interference-pattern {
-    left: 75vw;
+    left: 70vw;
     background: black;
+    border: 2px solid black;
 }
 
-#interference-plot {
-    margin-top: 0.5vh;
+#interference-graph {
     left: 80vw;
     background: white;
     border: 2px solid black;

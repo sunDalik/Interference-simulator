@@ -1,14 +1,14 @@
 let dragState = 0; // 1 if two-slits is being dragged; 2 if top-slit; 3 if bottom-slit; 0 if none
-const LScale = 1 / 100; // m/px when measuring L
-const DScale = 2 / 10 ** 5; // m/px when measuring d
-const ResScale = 2 / 10 ** 4; // m/px when displaying interference result
+const LScale = 100; // px/m when measuring L. Divide by scale to get L in meters.
+const DScale = 10 ** 5 / 2; // px/m when measuring d.
+const ResScale = 10 ** 4 / 2; // px/m when displaying interference result.
 
 window.addEventListener('DOMContentLoaded', () => {
     makeDraggableHorizontally(document.getElementById("light-source"));
     makeDraggableHorizontally(document.getElementById("two-slits"));
     makeDraggableHorizontally(document.getElementById("screen"));
     makeDraggableHorizontally(document.getElementById("interference-pattern"));
-    makeDraggableHorizontally(document.getElementById("interference-plot"));
+    makeDraggableHorizontally(document.getElementById("interference-graph"));
     redraw();
     makeSlitDraggable(document.getElementById("top-slit_dragger"));
     makeSlitDraggable(document.getElementById("bottom-slit_dragger"));
@@ -76,22 +76,20 @@ function makeDraggableHorizontally(element) {
 }
 
 function drawInterferencePlot() {
-    let svg = document.getElementById('interference-plot');
-    while (svg.firstChild) {
-        svg.removeChild(svg.firstChild);
-    }
+    let svg = document.getElementById('interference-graph');
+    removeAllChildren(svg);
     let amplitude = 100;
     let rarity = 1;
     let freq = 0.1;
     let step = 0.5;
-    let center = 50;
+    let center = getSlitsCenterRelativeToGraph();
     let T = calculatePeriod(getL(), getD(), getLambda());
     for (let i = -center; i <= (100 - center); i += step) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         line.setAttribute('y1', i + center * rarity);
-        line.setAttribute('x1', Math.cos(freq * Math.PI * i / T * ResScale) ** 2 * amplitude);
+        line.setAttribute('x1', Math.cos(freq * Math.PI * i / T / ResScale) ** 2 * amplitude);
         line.setAttribute('y2', (i + center + step) * rarity);
-        line.setAttribute('x2', Math.cos(freq * Math.PI * (i + step) / T * ResScale) ** 2 * amplitude);
+        line.setAttribute('x2', Math.cos(freq * Math.PI * (i + step) / T / ResScale) ** 2 * amplitude);
         line.setAttribute('stroke', 'black');
         line.setAttribute('stroke-width', '0.7');
         svg.appendChild(line);
@@ -100,16 +98,14 @@ function drawInterferencePlot() {
 
 function drawInterferencePattern() {
     let svg = document.getElementById('interference-pattern');
-    while (svg.firstChild) {
-        svg.removeChild(svg.firstChild);
-    }
+    removeAllChildren(svg);
     let freq = 0.1;
-    let center = 50;
+    let center = getSlitsCenterRelativeToGraph();
     let T = calculatePeriod(getL(), getD(), getLambda());
     for (let i = -center; i <= 100 - center; i += 0.5) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
         line.setAttribute('d', `M 0 ${i + center} h 100`);
-        const intensity = Math.cos(freq * Math.PI * i / T * ResScale) ** 2;
+        const intensity = Math.cos(freq * Math.PI * i / T / ResScale) ** 2;
         line.setAttribute('stroke', `rgba(255, 255, 255, ${intensity})`);
         line.setAttribute('stroke-width', '1');
         svg.appendChild(line);
@@ -154,7 +150,7 @@ function makeSlitDraggable(element) {
 function drawCentralLine() {
     const svg = document.getElementById('central-line');
     svg.style.left = `${document.getElementById('two-slits').getBoundingClientRect().right - document.getElementById('two-slits').getBoundingClientRect().width * 0.4}`;
-    svg.style.top = `${document.getElementById('two-slits').getBoundingClientRect().top + (Number(document.getElementById('top-slit_dragger').getAttribute('cy')) + Number(document.getElementById('bottom-slit_dragger').getAttribute('cy'))) / 2}`;
+    svg.style.top = `${getSlitsCenter()}`;
     const width = document.getElementById('screen').getBoundingClientRect().left - document.getElementById('two-slits').getBoundingClientRect().right + document.getElementById('two-slits').getBoundingClientRect().width * 0.4 + document.getElementById('screen').getBoundingClientRect().width * 0.4;
     svg.setAttribute('width', width);
     document.getElementById('central-line__line').setAttribute('x2', width);
@@ -168,12 +164,12 @@ function getL() {
     return (document.getElementById("screen").getBoundingClientRect().left -
         document.getElementById("two-slits").getBoundingClientRect().right +
         document.getElementById("two-slits").getBoundingClientRect().width * 0.4 +
-        document.getElementById("screen").getBoundingClientRect().width * 0.4) * LScale;
+        document.getElementById("screen").getBoundingClientRect().width * 0.4) / LScale;
 }
 
 function getD() {
     return (document.getElementById('bottom-slit_dragger').getAttribute('cy') -
-        document.getElementById('top-slit_dragger').getAttribute('cy')) * DScale;
+        document.getElementById('top-slit_dragger').getAttribute('cy')) / DScale;
 }
 
 function getLambda() {
@@ -191,4 +187,22 @@ function redraw() {
     drawCentralLine();
     drawInterferencePlot();
     drawInterferencePattern();
+}
+
+function getSlitsCenter() {
+    return Math.floor((document.getElementById('top-slit_dragger').getBoundingClientRect().bottom +
+        document.getElementById('bottom-slit_dragger').getBoundingClientRect().top) / 2);
+}
+
+function getSlitsCenterRelativeToGraph() {
+    console.log(getSlitsCenter());
+    console.log(document.getElementById('interference-graph').getBoundingClientRect().top);
+    console.log(document.getElementById('interference-graph').getBoundingClientRect().height);
+    return (getSlitsCenter() - document.getElementById('interference-graph').getBoundingClientRect().top) / document.getElementById('interference-graph').getBoundingClientRect().height * 100;
+}
+
+function removeAllChildren(parent) {
+    while (parent.hasChildNodes()) {
+        parent.removeChild(parent.firstChild);
+    }
 }
