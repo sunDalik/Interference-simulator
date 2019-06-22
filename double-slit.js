@@ -153,7 +153,7 @@ function makeSlitDraggable(element) {
 
 function drawCentralLine() {
     const svg = document.getElementById('central-line');
-    svg.style.left = `${document.getElementById('two-slits').getBoundingClientRect().right - document.getElementById('two-slits').getBoundingClientRect().width * 0.4}`;
+    svg.style.left = `${document.getElementById('two-slits').getBoundingClientRect().right - document.getElementById('two-slits').getBoundingClientRect().width * 0.4 - document.getElementById('schemaBox').getBoundingClientRect().left}`;
     svg.style.top = `${getSlitsCenter()}`;
     const width = document.getElementById('screen').getBoundingClientRect().left - document.getElementById('two-slits').getBoundingClientRect().right + document.getElementById('two-slits').getBoundingClientRect().width * 0.4 + document.getElementById('screen').getBoundingClientRect().width * 0.4;
     svg.setAttribute('width', width);
@@ -200,7 +200,7 @@ function redraw() {
 
 function getSlitsCenter() {
     return Math.floor((document.getElementById('top-slit_dragger').getBoundingClientRect().bottom +
-        document.getElementById('bottom-slit_dragger').getBoundingClientRect().top) / 2 - 1);
+        document.getElementById('bottom-slit_dragger').getBoundingClientRect().top) / 2 - 1) - document.getElementById('schemaBox').getBoundingClientRect().top;
 }
 
 function getSlitsCenterRelativeToGraph() {

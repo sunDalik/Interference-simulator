@@ -18,7 +18,7 @@ body {
     cursor: move;
 }
 
-.schema{
+#schemaBox{
     border: 2px solid black;
     position: absolute;
     left: 10vw;
