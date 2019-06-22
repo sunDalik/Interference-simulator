@@ -65,9 +65,9 @@ function makeDraggableHorizontally(element) {
     function dragElement(e) {
         posDiff = e.clientX - pos;
         pos = e.clientX;
-        const newPositionL = element.getBoundingClientRect().left + posDiff;
-        const newPositionR = element.getBoundingClientRect().right + posDiff;
-        if (newPositionL > 25 && newPositionR < window.innerWidth - 25 &&
+        const newPositionL = element.getBoundingClientRect().left + posDiff - document.getElementById('schemaBox').getBoundingClientRect().left - 2; // wtf border
+        const newPositionR = element.getBoundingClientRect().right + posDiff - document.getElementById('schemaBox').getBoundingClientRect().left - 2;
+        if (newPositionL > 25 && newPositionR < document.getElementById('schemaBox').getBoundingClientRect().width - 25 &&
             (element.id === "light-source" && newPositionR < document.getElementById("two-slits").getBoundingClientRect().left ||
                 element.id === "two-slits" && newPositionR < document.getElementById("screen").getBoundingClientRect().left && newPositionL > document.getElementById("light-source").getBoundingClientRect().right ||
                 element.id === "screen" && newPositionL > document.getElementById("two-slits").getBoundingClientRect().right ||
