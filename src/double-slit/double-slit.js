@@ -1,4 +1,7 @@
-var dragState = 0; //1 if two-slits is being dragged; 2 if top-slit; 3 if bottom-slit; 0 if none
+let dragState = 0; // 1 if two-slits is being dragged; 2 if top-slit; 3 if bottom-slit; 0 if none
+const LScale = 1 / 100; // m/px when measuring L
+const DScale = 2 / 10 ** 5; // m/px when measuring d
+const ResScale = 2 / 10 ** 4; // m/px when displaying interference result
 
 window.addEventListener('DOMContentLoaded', () => {
     makeDraggableHorizontally(document.getElementById("light-source"));
@@ -6,9 +9,7 @@ window.addEventListener('DOMContentLoaded', () => {
     makeDraggableHorizontally(document.getElementById("screen"));
     makeDraggableHorizontally(document.getElementById("interference-pattern"));
     makeDraggableHorizontally(document.getElementById("interference-plot"));
-    calculateInterferencePlot();
-    calculateInterferencePattern();
-    changeInfo();
+    redraw();
     makeSlitDraggable(document.getElementById("top-slit_dragger"));
     makeSlitDraggable(document.getElementById("bottom-slit_dragger"));
     document.getElementById("two-slits").addEventListener("mouseover", e => {
@@ -69,14 +70,12 @@ function makeDraggableHorizontally(element) {
                 element.id === "screen" && newPositionL > document.getElementById("two-slits").getBoundingClientRect().right ||
                 element.id === "interference-pattern" || element.id === "interference-plot")) {
             element.style.left = newPositionL + "px";
-            changeInfo();
-            calculateInterferencePlot();
-            calculateInterferencePattern();
+            redraw();
         }
     }
 }
 
-function calculateInterferencePlot() {
+function drawInterferencePlot() {
     let svg = document.getElementById('interference-plot');
     while (svg.firstChild) {
         svg.removeChild(svg.firstChild);
@@ -90,16 +89,16 @@ function calculateInterferencePlot() {
     for (let i = -center; i <= (100 - center); i += step) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         line.setAttribute('y1', i + center * rarity);
-        line.setAttribute('x1', Math.cos(freq * Math.PI * i / T / 10 ** 4 * 2) ** 2 * amplitude);
+        line.setAttribute('x1', Math.cos(freq * Math.PI * i / T * ResScale) ** 2 * amplitude);
         line.setAttribute('y2', (i + center + step) * rarity);
-        line.setAttribute('x2', Math.cos(freq * Math.PI * (i + step) / T / 10 ** 4 * 2) ** 2 * amplitude);
+        line.setAttribute('x2', Math.cos(freq * Math.PI * (i + step) / T * ResScale) ** 2 * amplitude);
         line.setAttribute('stroke', 'black');
         line.setAttribute('stroke-width', '0.7');
         svg.appendChild(line);
     }
 }
 
-function calculateInterferencePattern() {
+function drawInterferencePattern() {
     let svg = document.getElementById('interference-pattern');
     while (svg.firstChild) {
         svg.removeChild(svg.firstChild);
@@ -110,7 +109,7 @@ function calculateInterferencePattern() {
     for (let i = -center; i <= 100 - center; i += 0.5) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
         line.setAttribute('d', `M 0 ${i + center} h 100`);
-        const intensity = Math.cos(freq * Math.PI * i / T / 10 ** 4 * 2) ** 2;
+        const intensity = Math.cos(freq * Math.PI * i / T * ResScale) ** 2;
         line.setAttribute('stroke', `rgba(255, 255, 255, ${intensity})`);
         line.setAttribute('stroke-width', '1');
         svg.appendChild(line);
@@ -147,11 +146,18 @@ function makeSlitDraggable(element) {
             } else if (element.id === "bottom-slit_dragger") {
                 document.getElementById("bottom-slit").setAttribute('y', newPosition - 4);
             }
-            changeInfo();
-            calculateInterferencePlot();
-            calculateInterferencePattern();
+            redraw();
         }
     }
+}
+
+function drawCentralLine() {
+    const svg = document.getElementById('central-line');
+    svg.style.left = `${document.getElementById('two-slits').getBoundingClientRect().right - document.getElementById('two-slits').getBoundingClientRect().width * 0.4}`;
+    svg.style.top = `${document.getElementById('two-slits').getBoundingClientRect().top + (Number(document.getElementById('top-slit_dragger').getAttribute('cy')) + Number(document.getElementById('bottom-slit_dragger').getAttribute('cy'))) / 2}`;
+    const width = document.getElementById('screen').getBoundingClientRect().left - document.getElementById('two-slits').getBoundingClientRect().right + document.getElementById('two-slits').getBoundingClientRect().width * 0.4 + document.getElementById('screen').getBoundingClientRect().width * 0.4;
+    svg.setAttribute('width', width);
+    document.getElementById('central-line__line').setAttribute('x2', width);
 }
 
 function calculatePeriod(L, d, lambda) {
@@ -161,12 +167,13 @@ function calculatePeriod(L, d, lambda) {
 function getL() {
     return (document.getElementById("screen").getBoundingClientRect().left -
         document.getElementById("two-slits").getBoundingClientRect().right +
-        document.getElementById("two-slits").getBoundingClientRect().width * 0.4) / 100;
+        document.getElementById("two-slits").getBoundingClientRect().width * 0.4 +
+        document.getElementById("screen").getBoundingClientRect().width * 0.4) * LScale;
 }
 
 function getD() {
     return (document.getElementById('bottom-slit_dragger').getAttribute('cy') -
-        document.getElementById('top-slit_dragger').getAttribute('cy')) * 2 / 10 ** 5;
+        document.getElementById('top-slit_dragger').getAttribute('cy')) * DScale;
 }
 
 function getLambda() {
@@ -177,4 +184,11 @@ function mouseUp() {
     document.onmousemove = null;
     dragState = 0;
     document.getElementById("two-slits_obstacle").style.fill = "black";
+}
+
+function redraw() {
+    changeInfo();
+    drawCentralLine();
+    drawInterferencePlot();
+    drawInterferencePattern();
 }
