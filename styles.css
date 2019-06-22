@@ -1,4 +1,12 @@
-@import "../common.css";
+@import "flexes.css";
+
+body {
+    padding: 15px;
+}
+
+.top-margin {
+    margin-top: 200px;
+}
 
 .schema {
     margin-top: 40px;

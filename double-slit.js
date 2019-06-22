@@ -72,7 +72,7 @@ function makeDraggableHorizontally(element) {
             (element.id === "light-source" && newPositionR < document.getElementById("two-slits").getBoundingClientRect().left ||
                 element.id === "two-slits" && newPositionR < document.getElementById("screen").getBoundingClientRect().left && newPositionL > document.getElementById("light-source").getBoundingClientRect().right ||
                 element.id === "screen" && newPositionL > document.getElementById("two-slits").getBoundingClientRect().right ||
-                element.id === "interference-pattern" || element.id === "interference-plot")) {
+                element.id === "interference-pattern" || element.id === "interference-graph")) {
             element.style.left = newPositionL + "px";
             redraw();
         }
@@ -200,7 +200,7 @@ function redraw() {
 
 function getSlitsCenter() {
     return Math.floor((document.getElementById('top-slit_dragger').getBoundingClientRect().bottom +
-        document.getElementById('bottom-slit_dragger').getBoundingClientRect().top) / 2);
+        document.getElementById('bottom-slit_dragger').getBoundingClientRect().top) / 2 - 1);
 }
 
 function getSlitsCenterRelativeToGraph() {
