@@ -86,13 +86,13 @@ function calculateInterferencePlot() {
     let freq = 0.1;
     let step = 0.5;
     let center = 50;
-    let T = calculatePeriod(getL(), getD(), getLambda()); // interference period
+    let T = calculatePeriod(getL(), getD(), getLambda());
     for (let i = -center; i <= (100 - center); i += step) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         line.setAttribute('y1', i + center * rarity);
-        line.setAttribute('x1', Math.cos(freq * Math.PI * i / T / 10 ** 2) ** 2 * amplitude);
+        line.setAttribute('x1', Math.cos(freq * Math.PI * i / T / 10 ** 4 * 2) ** 2 * amplitude);
         line.setAttribute('y2', (i + center + step) * rarity);
-        line.setAttribute('x2', Math.cos(freq * Math.PI * (i + step) / T / 10 ** 2) ** 2 * amplitude);
+        line.setAttribute('x2', Math.cos(freq * Math.PI * (i + step) / T / 10 ** 4 * 2) ** 2 * amplitude);
         line.setAttribute('stroke', 'black');
         line.setAttribute('stroke-width', '0.7');
         svg.appendChild(line);
@@ -106,11 +106,11 @@ function calculateInterferencePattern() {
     }
     let freq = 0.1;
     let center = 50;
-    let T = calculatePeriod(getL(), getD(), getLambda()); // interference period
+    let T = calculatePeriod(getL(), getD(), getLambda());
     for (let i = -center; i <= 100 - center; i += 0.5) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
         line.setAttribute('d', `M 0 ${i + center} h 100`);
-        const intensity = Math.cos(freq * Math.PI * i / T / 10 ** 2) ** 2;
+        const intensity = Math.cos(freq * Math.PI * i / T / 10 ** 4 * 2) ** 2;
         line.setAttribute('stroke', `rgba(255, 255, 255, ${intensity})`);
         line.setAttribute('stroke-width', '1');
         svg.appendChild(line);
@@ -166,7 +166,7 @@ function getL() {
 
 function getD() {
     return (document.getElementById('bottom-slit_dragger').getAttribute('cy') -
-        document.getElementById('top-slit_dragger').getAttribute('cy')) / 10 ** 5;
+        document.getElementById('top-slit_dragger').getAttribute('cy')) * 2 / 10 ** 5;
 }
 
 function getLambda() {
