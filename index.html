@@ -8,38 +8,42 @@
 </head>
 
 <body>
-<div class="schema">
-    <svg xmlns="http://www.w3.org/2000/svg" id="light-source" width="50px" height="400px"
-         viewBox="0 0 100 100" preserveAspectRatio="none">
-        <path d="M 40,0 v 49 h 20 v -49 Z M 40,100 v -49 h 20 v 49 Z" fill="black"></path>
-    </svg>
-    <svg xmlns="http://www.w3.org/2000/svg" id="two-slits" width="50px" height="400px">
-        <rect id="two-slits_obstacle" x="20" y="0" height="400" width="10" fill="black"></rect>
-        <rect id="top-slit" x="0" y="116" height="8" width="100" fill="white"></rect>
-        <circle id="top-slit_dragger" class="slit-draggers" cx="25" cy="120" r="20" fill="rgba(0,0,0,0)"></circle>
-        <rect id="bottom-slit" x="0" y="276" height="8" width="100" fill="white"></rect>
-        <circle id="bottom-slit_dragger" class="slit-draggers" cx="25" cy="280" r="20" fill="rgba(0,0,0,0)"></circle>
-    </svg>
-    <svg xmlns="http://www.w3.org/2000/svg" id="screen" width="50px" height="400px"
-         viewBox="0 0 100 100" preserveAspectRatio="none">
-        <path d="M 40,0 v 100 h 20 v -100 Z" fill="black"></path>
-
-    </svg>
-    <svg xmlns="http://www.w3.org/2000/svg" id="interference-pattern" width="50px" height="400px"
-         viewBox="0 0 100 100" preserveAspectRatio="none">
-    </svg>
-    <svg xmlns="http://www.w3.org/2000/svg" id="interference-graph" width="60px" height="400px"
-         viewBox="0 0 100 100" preserveAspectRatio="none">
-    </svg>
-    <svg xmlns="http://www.w3.org/2000/svg" id="central-line" height="4px">
-        <line id="central-line__line" stroke-dasharray="20" stroke-width="4" x1="0" y1="2" x2="0" y2="2"
-              stroke="gray"></line>
-    </svg>
+<div class="simulation">
+    <div class="schema">
+        <svg xmlns="http://www.w3.org/2000/svg" id="light-source" width="50px" height="400px"
+             viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M 40,0 v 49 h 20 v -49 Z M 40,100 v -49 h 20 v 49 Z" fill="black"></path>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" id="two-slits" width="50px" height="400px">
+            <rect id="two-slits_obstacle" x="20" y="0" height="400" width="10" fill="black"></rect>
+            <rect id="top-slit" x="0" y="116" height="8" width="100" fill="white"></rect>
+            <circle id="top-slit_dragger" class="slit-draggers" cx="25" cy="120" r="20" fill="rgba(0,0,0,0)"></circle>
+            <rect id="bottom-slit" x="0" y="276" height="8" width="100" fill="white"></rect>
+            <circle id="bottom-slit_dragger" class="slit-draggers" cx="25" cy="280" r="20"
+                    fill="rgba(0,0,0,0)"></circle>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" id="screen" width="50px" height="400px"
+             viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M 40,0 v 100 h 20 v -100 Z" fill="black"></path>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" id="central-line" height="4px">
+            <line id="central-line__line" stroke-dasharray="20" stroke-width="4" x1="0" y1="2" x2="0" y2="2"
+                  stroke="gray"></line>
+        </svg>
+    </div>
+    <div>
+        <svg xmlns="http://www.w3.org/2000/svg" id="interference-pattern" width="60px" height="400px"
+             viewBox="0 0 100 100" preserveAspectRatio="none">
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" id="interference-graph" width="60px" height="400px"
+             viewBox="0 0 100 100" preserveAspectRatio="none">
+        </svg>
+    </div>
 </div>
 <div class="info">
     <label>
         Adjust wavelength <br>
-        <input id="lambda-slider" type="range" min="380" max="780">
+        <input id="lambda-slider" type="range" class="customRange" min="380" max="780">
     </label>
     <div> L = <span id="L"></span></div>
     <div> d = <span id="d"></span></div>

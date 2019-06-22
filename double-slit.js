@@ -13,7 +13,6 @@ window.addEventListener('DOMContentLoaded', () => {
     makeSlitDraggable(document.getElementById("top-slit_dragger"));
     makeSlitDraggable(document.getElementById("bottom-slit_dragger"));
     document.getElementById('lambda-slider').addEventListener('input', () => {
-        changeInfo();
         redraw();
     });
     document.getElementById("two-slits").addEventListener("mouseover", e => {
@@ -196,6 +195,7 @@ function redraw() {
     drawCentralLine();
     drawInterferencePlot();
     drawInterferencePattern();
+    document.getElementById('lambda-slider').style.setProperty('--customBG', getColorByWavelength(getLambdaNM()));
 }
 
 function getSlitsCenter() {

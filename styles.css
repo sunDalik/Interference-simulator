@@ -1,4 +1,5 @@
 @import "flexes.css";
+@import "range.css";
 
 body {
     padding: 15px;
@@ -8,25 +9,33 @@ body {
     margin-top: 200px;
 }
 
-.schema {
-    margin-top: 40px;
+.simulation {
+    margin-top: 60px;
 }
 
-.schema svg {
+.simulation svg {
     position: absolute;
     cursor: move;
 }
 
+.schema{
+    border: 2px solid black;
+    position: absolute;
+    left: 10vw;
+    width: 55vw;
+    height: 400px;
+}
+
 #light-source {
-    left: 20vw;
+    left: 10vw;
 }
 
 #two-slits, #two-slits_draggers {
-    left: 40vw;
+    left: 30vw;
 }
 
 #screen {
-    left: 60vw;
+    left: 50vw;
 }
 
 #interference-pattern {
