@@ -130,8 +130,8 @@ function makeSlitDraggable(element) {
         const shiftT = Number(element.getAttribute('cy')) - e.clientY;
         document.onmousemove = function (e) {
             let NewPosition = e.clientY + shiftT;
-            if (NewPosition < 25) {
-                NewPosition = 25;
+            if (NewPosition < 40) {
+                NewPosition = 40;
             }
             const bottomEdge = document.getElementById("schemaBox").getBoundingClientRect().height - element.getBoundingClientRect().height;
             if (bottomEdge - NewPosition < 25) {
@@ -204,8 +204,7 @@ function getSlitsCenter() {
 }
 
 function getSlitsCenterRelativeToGraph() {
-    return (getSlitsCenter() - document.getElementById('interference-graph').getBoundingClientRect().top) /
-        document.getElementById('interference-graph').getBoundingClientRect().height * 100;
+    return getSlitsCenter() / document.getElementById('interference-graph').getBoundingClientRect().height * 100;
 }
 
 function removeAllChildren(parent) {
