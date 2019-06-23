@@ -14,11 +14,10 @@ body {
 }
 
 .simulation svg {
-    position: absolute;
     cursor: move;
 }
 
-#schemaBox{
+#schemaBox {
     border: 2px solid black;
     position: absolute;
     left: 10vw;
@@ -26,16 +25,24 @@ body {
     height: 400px;
 }
 
+#schemaBox svg {
+    position: absolute;
+}
+
+#resultBox {
+
+}
+
 #light-source {
-    left: 10vw;
+    left: 5vw;
 }
 
 #two-slits, #two-slits_draggers {
-    left: 30vw;
+    left: 20vw;
 }
 
 #screen {
-    left: 50vw;
+    left: 45vw;
 }
 
 #interference-pattern {

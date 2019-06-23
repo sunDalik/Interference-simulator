@@ -1,7 +1,7 @@
 let dragState = 0; // 1 if two-slits is being dragged; 2 if top-slit; 3 if bottom-slit; 0 if none
 const LScale = 100; // px/m when measuring L. Divide by scale to get L in meters.
 const DScale = 10 ** 5 / 2; // px/m when measuring d.
-const ResScale = 10 ** 4 / 2; // px/m when displaying interference result.
+const ResScale = 10 ** 5 / 2; // px/m when displaying interference result.
 
 window.addEventListener('DOMContentLoaded', () => {
     makeDraggableHorizontally(document.getElementById("light-source"));
@@ -50,30 +50,31 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function makeDraggableHorizontally(element) {
-    let posDiff = 0, pos = 0;
     element.onmousedown = mouseDown;
     document.onmouseup = mouseUp;
 
     function mouseDown(e) {
         if (e.target.id !== "top-slit_dragger" && e.target.id !== "bottom-slit_dragger") {
             dragState = 1;
-            document.onmousemove = dragElement;
-            pos = e.clientX;
-        }
-    }
 
-    function dragElement(e) {
-        posDiff = e.clientX - pos;
-        pos = e.clientX;
-        const newPositionL = element.getBoundingClientRect().left + posDiff - document.getElementById('schemaBox').getBoundingClientRect().left - 2; // wtf border
-        const newPositionR = element.getBoundingClientRect().right + posDiff - document.getElementById('schemaBox').getBoundingClientRect().left - 2;
-        if (newPositionL > 25 && newPositionR < document.getElementById('schemaBox').getBoundingClientRect().width - 25 &&
-            (element.id === "light-source" && newPositionR < document.getElementById("two-slits").getBoundingClientRect().left ||
-                element.id === "two-slits" && newPositionR < document.getElementById("screen").getBoundingClientRect().left && newPositionL > document.getElementById("light-source").getBoundingClientRect().right ||
-                element.id === "screen" && newPositionL > document.getElementById("two-slits").getBoundingClientRect().right ||
-                element.id === "interference-pattern" || element.id === "interference-graph")) {
-            element.style.left = newPositionL + "px";
-            redraw();
+            const shiftL = e.clientX - element.getBoundingClientRect().left;
+            document.onmousemove = function (e) {
+                let newPositionL = e.clientX - shiftL - document.getElementById('schemaBox').getBoundingClientRect().left;
+                let newPositionR = document.getElementById('schemaBox').getBoundingClientRect().right - (e.clientX - shiftL + element.getBoundingClientRect().width);
+                if (newPositionL < 25) {
+                    newPositionL = 25;
+                }
+                const rightEdge = document.getElementById("schemaBox").getBoundingClientRect().width - element.getBoundingClientRect().width;
+                if (rightEdge - newPositionL < 25) {
+                    newPositionL = rightEdge - 25;
+                }
+                if (element.id === "light-source" && (newPositionR - parseFloat(getComputedStyle(document.getElementById("two-slits")).right)) > 75 ||
+                    element.id === "two-slits" && (newPositionR - parseFloat(getComputedStyle(document.getElementById("screen")).right)) > 100 && (newPositionL - parseFloat(getComputedStyle(document.getElementById("light-source")).left)) > 75 ||
+                    element.id === "screen" && (newPositionL - parseFloat(getComputedStyle(document.getElementById("two-slits")).left)) > 100) {
+                    element.style.left = newPositionL + 'px';
+                    redraw();
+                }
+            }
         }
     }
 }
@@ -83,16 +84,15 @@ function drawInterferencePlot() {
     removeAllChildren(svg);
     let amplitude = 100;
     let rarity = 1;
-    let freq = 0.1;
     let step = 0.5;
     let center = getSlitsCenterRelativeToGraph();
     let T = calculatePeriod(getL(), getD(), getLambda());
     for (let i = -center; i <= (100 - center); i += step) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
         line.setAttribute('y1', i + center * rarity);
-        line.setAttribute('x1', Math.cos(freq * Math.PI * i / T / ResScale) ** 2 * amplitude);
+        line.setAttribute('x1', Math.cos(Math.PI * i / T / ResScale) ** 2 * amplitude);
         line.setAttribute('y2', (i + center + step) * rarity);
-        line.setAttribute('x2', Math.cos(freq * Math.PI * (i + step) / T / ResScale) ** 2 * amplitude);
+        line.setAttribute('x2', Math.cos(Math.PI * (i + step) / T / ResScale) ** 2 * amplitude);
         line.setAttribute('stroke', 'black');
         line.setAttribute('stroke-width', '0.7');
         svg.appendChild(line);
@@ -102,14 +102,13 @@ function drawInterferencePlot() {
 function drawInterferencePattern() {
     let svg = document.getElementById('interference-pattern');
     removeAllChildren(svg);
-    let freq = 0.1;
     let step = 0.5;
     let center = getSlitsCenterRelativeToGraph();
     let T = calculatePeriod(getL(), getD(), getLambda());
     for (let i = -center; i <= 100 - center; i += step) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
         line.setAttribute('d', `M 0 ${i + center} h 100`);
-        line.setAttribute('opacity', Math.cos(freq * Math.PI * i / T / ResScale) ** 2);
+        line.setAttribute('opacity', Math.cos(Math.PI * i / T / ResScale) ** 2);
         line.setAttribute('stroke', getColorByWavelength(getLambdaNM()));
         line.setAttribute('stroke-width', '1');
         svg.appendChild(line);
@@ -123,37 +122,38 @@ function changeInfo() {
 }
 
 function makeSlitDraggable(element) {
-    let posDiff = 0, pos = 0;
     element.onmousedown = mouseDown;
     document.onmouseup = mouseUp;
 
     function mouseDown(e) {
         dragState = element.id === "top-slit_dragger" ? 2 : 3;
-        document.onmousemove = dragElement;
-        pos = e.clientY;
-    }
-
-    function dragElement(e) {
-        posDiff = e.clientY - pos;
-        pos = e.clientY;
-        const newPosition = Number(element.getAttribute('cy')) + posDiff;
-        if (newPosition > 50 && newPosition < 350 &&
-            (element.id === 'top-slit_dragger' && document.getElementById('bottom-slit_dragger').getAttribute('cy') - newPosition > 30 ||
-                element.id === "bottom-slit_dragger" && newPosition - document.getElementById('top-slit_dragger').getAttribute('cy') > 30)) {
-            element.setAttribute('cy', newPosition);
-            if (element.id === "top-slit_dragger") {
-                document.getElementById("top-slit").setAttribute('y', newPosition - 4);
-            } else if (element.id === "bottom-slit_dragger") {
-                document.getElementById("bottom-slit").setAttribute('y', newPosition - 4);
+        const shiftT = Number(element.getAttribute('cy')) - e.clientY;
+        document.onmousemove = function (e) {
+            let NewPosition = e.clientY + shiftT;
+            if (NewPosition < 25) {
+                NewPosition = 25;
             }
-            redraw();
+            const bottomEdge = document.getElementById("schemaBox").getBoundingClientRect().height - element.getBoundingClientRect().height;
+            if (bottomEdge - NewPosition < 25) {
+                NewPosition = bottomEdge - 25;
+            }
+            if (element.id === 'top-slit_dragger' && document.getElementById('bottom-slit_dragger').getAttribute('cy') - NewPosition > 30 ||
+                element.id === "bottom-slit_dragger" && NewPosition - document.getElementById('top-slit_dragger').getAttribute('cy') > 30) {
+                element.setAttribute('cy', NewPosition);
+                if (element.id === "top-slit_dragger") {
+                    document.getElementById("top-slit").setAttribute('y', NewPosition - 4);
+                } else if (element.id === "bottom-slit_dragger") {
+                    document.getElementById("bottom-slit").setAttribute('y', NewPosition - 4);
+                }
+                redraw();
+            }
         }
     }
 }
 
 function drawCentralLine() {
-    const svg = document.getElementById('central-line');
-    svg.style.left = `${document.getElementById('two-slits').getBoundingClientRect().right - document.getElementById('two-slits').getBoundingClientRect().width * 0.4 - document.getElementById('schemaBox').getBoundingClientRect().left}`;
+    let svg = document.getElementById('central-line');
+    svg.style.left = `${document.getElementById('two-slits').getBoundingClientRect().right - document.getElementById('two-slits').getBoundingClientRect().width * 0.4 - document.getElementById('schemaBox').getBoundingClientRect().left - 2}`;
     svg.style.top = `${getSlitsCenter()}`;
     const width = document.getElementById('screen').getBoundingClientRect().left - document.getElementById('two-slits').getBoundingClientRect().right + document.getElementById('two-slits').getBoundingClientRect().width * 0.4 + document.getElementById('screen').getBoundingClientRect().width * 0.4;
     svg.setAttribute('width', width);
@@ -199,8 +199,8 @@ function redraw() {
 }
 
 function getSlitsCenter() {
-    return Math.floor((document.getElementById('top-slit_dragger').getBoundingClientRect().bottom +
-        document.getElementById('bottom-slit_dragger').getBoundingClientRect().top) / 2 - 1) - document.getElementById('schemaBox').getBoundingClientRect().top;
+    return Math.floor((document.getElementById('top-slit_dragger').getBoundingClientRect().bottom - document.getElementById('schemaBox').getBoundingClientRect().top +
+        document.getElementById('bottom-slit_dragger').getBoundingClientRect().top - document.getElementById('schemaBox').getBoundingClientRect().top) / 2 - 1 - 2);
 }
 
 function getSlitsCenterRelativeToGraph() {
@@ -214,6 +214,7 @@ function removeAllChildren(parent) {
     }
 }
 
+// got it from johndcook.com/wavelength_to_RGB.html and tweaked a little
 function getColorByWavelength(wavelength) {
     let r, g, b, alpha;
     if (wavelength >= 380 && wavelength < 440) {
@@ -265,6 +266,5 @@ function getColorByWavelength(wavelength) {
     r = r > 0 ? 255 * Math.pow(r * alpha, gamma) : 0;
     g = g > 0 ? 255 * Math.pow(g * alpha, gamma) : 0;
     b = b > 0 ? 255 * Math.pow(b * alpha, gamma) : 0;
-
     return `rgb(${r}, ${g}, ${b})`;
 }
