@@ -58,13 +58,13 @@ function makeDraggableHorizontally(element) {
             dragState = 1;
 
             const shiftL = e.clientX - element.getBoundingClientRect().left;
+            const rightEdge = document.getElementById("schemaBox").getBoundingClientRect().width - element.getBoundingClientRect().width;
             document.onmousemove = function (e) {
                 let newPositionL = e.clientX - shiftL - document.getElementById('schemaBox').getBoundingClientRect().left;
                 let newPositionR = document.getElementById('schemaBox').getBoundingClientRect().right - (e.clientX - shiftL + element.getBoundingClientRect().width);
                 if (newPositionL < 25) {
                     newPositionL = 25;
                 }
-                const rightEdge = document.getElementById("schemaBox").getBoundingClientRect().width - element.getBoundingClientRect().width;
                 if (rightEdge - newPositionL < 25) {
                     newPositionL = rightEdge - 25;
                 }
@@ -128,14 +128,14 @@ function makeSlitDraggable(element) {
     function mouseDown(e) {
         dragState = element.id === "top-slit_dragger" ? 2 : 3;
         const shiftT = Number(element.getAttribute('cy')) - e.clientY;
+        const bottomEdge = document.getElementById("schemaBox").getBoundingClientRect().height;
         document.onmousemove = function (e) {
             let NewPosition = e.clientY + shiftT;
             if (NewPosition < 40) {
                 NewPosition = 40;
             }
-            const bottomEdge = document.getElementById("schemaBox").getBoundingClientRect().height - element.getBoundingClientRect().height;
-            if (bottomEdge - NewPosition < 25) {
-                NewPosition = bottomEdge - 25;
+            if (bottomEdge - NewPosition < 40) {
+                NewPosition = bottomEdge - 40;
             }
             if (element.id === 'top-slit_dragger' && document.getElementById('bottom-slit_dragger').getAttribute('cy') - NewPosition > 30 ||
                 element.id === "bottom-slit_dragger" && NewPosition - document.getElementById('top-slit_dragger').getAttribute('cy') > 30) {
