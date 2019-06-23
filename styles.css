@@ -30,7 +30,8 @@ body {
 }
 
 #resultBox {
-
+    position: absolute;
+    left: 68vw;
 }
 
 #light-source {
@@ -46,13 +47,12 @@ body {
 }
 
 #interference-pattern {
-    left: 70vw;
     background: black;
     border: 2px solid black;
 }
 
 #interference-graph {
-    left: 80vw;
+    margin-left: 25px;
     background: white;
     border: 2px solid black;
     padding: 0 10px;

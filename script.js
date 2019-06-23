@@ -62,11 +62,11 @@ function makeDraggableHorizontally(element) {
             document.onmousemove = function (e) {
                 let newPositionL = e.clientX - shiftL - document.getElementById('schemaBox').getBoundingClientRect().left;
                 let newPositionR = document.getElementById('schemaBox').getBoundingClientRect().right - (e.clientX - shiftL + element.getBoundingClientRect().width);
-                if (newPositionL < 25) {
-                    newPositionL = 25;
+                if (newPositionL < 40) {
+                    newPositionL = 40;
                 }
-                if (rightEdge - newPositionL < 25) {
-                    newPositionL = rightEdge - 25;
+                if (rightEdge - newPositionL < 40) {
+                    newPositionL = rightEdge - 40;
                 }
                 if (element.id === "light-source" && (newPositionR - parseFloat(getComputedStyle(document.getElementById("two-slits")).right)) > 75 ||
                     element.id === "two-slits" && (newPositionR - parseFloat(getComputedStyle(document.getElementById("screen")).right)) > 100 && (newPositionL - parseFloat(getComputedStyle(document.getElementById("light-source")).left)) > 75 ||
@@ -137,8 +137,8 @@ function makeSlitDraggable(element) {
             if (bottomEdge - NewPosition < 40) {
                 NewPosition = bottomEdge - 40;
             }
-            if (element.id === 'top-slit_dragger' && document.getElementById('bottom-slit_dragger').getAttribute('cy') - NewPosition > 30 ||
-                element.id === "bottom-slit_dragger" && NewPosition - document.getElementById('top-slit_dragger').getAttribute('cy') > 30) {
+            if (element.id === 'top-slit_dragger' && document.getElementById('bottom-slit_dragger').getAttribute('cy') - NewPosition > 40 ||
+                element.id === "bottom-slit_dragger" && NewPosition - document.getElementById('top-slit_dragger').getAttribute('cy') > 40) {
                 element.setAttribute('cy', NewPosition);
                 if (element.id === "top-slit_dragger") {
                     document.getElementById("top-slit").setAttribute('y', NewPosition - 4);
