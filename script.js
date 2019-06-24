@@ -215,7 +215,14 @@ function drawWaves() {
         const waveB = wave.cloneNode(true);
         waveB.setAttribute('d', `M ${waveSize - 10} ${parseFloat(slitBottom.getAttribute("y")) + 4 - waveSize} q ${waveSize / 2} ${waveSize} 0 ${waveSize * 2}`);
         wavesSvg.appendChild(waveB);
-        const waveLs = wave.cloneNode(true);
+    }
+    for (let i = 0; ; i++) {
+        const waveLs = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        const waveSize = wavelength / 10 * (i + 1);
+        if ((waveSize - 10) > parseFloat(lsWavesSvg.getAttribute('width'))) break;
+        waveLs.setAttribute('fill', 'none');
+        waveLs.setAttribute('opacity', '0.5');
+        waveLs.setAttribute('stroke', getColorByWavelength(wavelength));
         waveLs.setAttribute('d', `M ${waveSize - 10} ${ls.getBoundingClientRect().height / 2 - waveSize} q ${waveSize / 2} ${waveSize} 0 ${waveSize * 2}`);
         lsWavesSvg.appendChild(waveLs);
     }
