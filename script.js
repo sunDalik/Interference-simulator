@@ -265,7 +265,7 @@ function drawDLine() {
     svg.style.left = parseFloat(getComputedStyle(document.getElementById('two-slits')).left) - 10 + 'px';
     svg.style.top = topSlit.top + topSlit.height / 2 - document.getElementById('schemaBox').getBoundingClientRect().top - 2 + 'px';
     path.setAttribute('d', `M 17 2 l -5 5 m 5 -5 l 5 5 m -5 -5 v ${height - 4} l -5 -5 m 5 5 l 5 -5`);
-    document.getElementById('D-line__text').setAttribute('y', height / 2);
+    document.getElementById('D-line__text').setAttribute('y', height / 2 + 5);
     const bottomStand = document.getElementById('D-line__bottom-stand');
     bottomStand.setAttribute('y1', height - 1);
     bottomStand.setAttribute('y2', height - 1);

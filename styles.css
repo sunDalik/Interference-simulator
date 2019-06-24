@@ -1,4 +1,3 @@
-@import "flexes.css";
 @import "range.css";
 
 body {
@@ -58,7 +57,10 @@ body {
 }
 
 .info {
-    margin-top: 500px;
+    margin-top: 510px;
+    font-size: 17px;
+    line-height: 23px;
+    margin-left: 30px;
 }
 
 #L-line {
