@@ -54,7 +54,7 @@ body {
     margin-left: 25px;
     background: white;
     border: 2px solid black;
-    padding: 0 10px;
+    padding: 0 20px 0 0;
 }
 
 .info {
@@ -63,4 +63,10 @@ body {
 
 #L-line {
     top: 360px;
+    user-select: none;
+}
+
+#D-line {
+    top: 360px;
+    user-select: none;
 }
