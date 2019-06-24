@@ -16,7 +16,7 @@ body {
     border: 2px solid black;
     position: absolute;
     left: 10vw;
-    width: 55vw;
+    width: 52vw;
     height: 400px;
 }
 
@@ -26,7 +26,7 @@ body {
 
 #resultBox {
     position: absolute;
-    left: 68vw;
+    left: 65vw;
 }
 
 #light-source {

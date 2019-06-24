@@ -253,7 +253,7 @@ function drawLLine() {
     svg.setAttribute('width', width);
     svg.style.left = twoSlits.left + 30 - document.getElementById('schemaBox').getBoundingClientRect().left - 2 + 'px';
     path.setAttribute('d', `M 0 17 l 5 -5 m -5 5 l 5 5 m -5 -5 h ${width} l -5 -5 m 5 5 l -5 5`);
-    document.getElementById('L-line__text').setAttribute('x', width / 2);
+    document.getElementById('L-line__text').setAttribute('x', width / 2 - 5);
 }
 
 function drawDLine() {

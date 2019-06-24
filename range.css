@@ -2,7 +2,7 @@
 
 .customRange {
     -webkit-appearance: none;
-    width: 300px;
+    width: 260px;
     margin: 7px 0;
     --customBG: white
 }
@@ -33,7 +33,7 @@
 }
 
 .customRange::-moz-range-track {
-    width: 300px;
+    width: 260px;
     height: 12px;
     cursor: pointer;
     box-shadow: 1px 1px 1px black, 0 0 2px black;
