@@ -209,11 +209,11 @@ function drawWaves() {
     removeAllChildren(wavesSvg);
     wavesSvg.style.left = parseFloat(getComputedStyle(twoSlits).left) + 25 + 'px';
     wavesSvg.setAttribute('width', screen.getBoundingClientRect().left - twoSlits.getBoundingClientRect().left - 5 + 'px');
+    const wavelength = document.getElementById('lambda-slider').value;
     for (let i = 0; ; i++) {
         const wave = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        const wavelength = document.getElementById('lambda-slider').value;
         const waveSize = wavelength / 10 * (i + 1);
-        if (waveSize > parseFloat(wavesSvg.getAttribute('width'))) break;
+        if ((waveSize - 10) > parseFloat(wavesSvg.getAttribute('width'))) break;
         wave.setAttribute('d', `M ${waveSize - 10} ${parseFloat(slitTop.getAttribute("y")) + 4 - waveSize} q ${waveSize / 2} ${waveSize} 0 ${waveSize * 2}`);
         wave.setAttribute('fill', 'none');
         wave.setAttribute('opacity', '0.5');
@@ -228,7 +228,17 @@ function drawWaves() {
 function drawNaturalLight() {
     const lightSvg = document.getElementById('natural-light');
     removeAllChildren(lightSvg);
-
+    const width = parseFloat(getComputedStyle(document.getElementById('light-source')).left) + 10;
+    lightSvg.setAttribute('width', width + 'px');
+    const wavelength = document.getElementById('lambda-slider').value;
+    for (let i = 50; i <= 350; i += 50) {
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        line.setAttribute('d', `M 0 ${i} h ${width} l -5 -5 m 5 5 l -5 5`);
+        line.setAttribute('fill', 'none');
+        line.setAttribute('opacity', '0.5');
+        line.setAttribute("stroke", getColorByWavelength(wavelength));
+        lightSvg.appendChild(line);
+    }
 }
 
 function getSlitsCenter() {
