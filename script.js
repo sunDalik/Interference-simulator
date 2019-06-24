@@ -3,51 +3,38 @@ const LScale = 100; // px/m when measuring L. Divide by scale to get L in meters
 const DScale = 10 ** 5 / 2; // px/m when measuring d.
 const ResScale = 10 ** 5 / 2; // px/m when displaying interference result.
 
-window.addEventListener('DOMContentLoaded', () => {
-    makeDraggableHorizontally(document.getElementById("light-source"));
-    makeDraggableHorizontally(document.getElementById("two-slits"));
-    makeDraggableHorizontally(document.getElementById("screen"));
-    makeDraggableHorizontally(document.getElementById("interference-pattern"));
-    makeDraggableHorizontally(document.getElementById("interference-graph"));
+makeDraggableHorizontally(document.getElementById("light-source"));
+makeDraggableHorizontally(document.getElementById("two-slits"));
+makeDraggableHorizontally(document.getElementById("screen"));
+makeDraggableHorizontally(document.getElementById("interference-pattern"));
+makeDraggableHorizontally(document.getElementById("interference-graph"));
+redraw();
+makeSlitDraggable(document.getElementById("top-slit_dragger"));
+makeSlitDraggable(document.getElementById("bottom-slit_dragger"));
+document.getElementById('lambda-slider').addEventListener('input', () => {
     redraw();
-    makeSlitDraggable(document.getElementById("top-slit_dragger"));
-    makeSlitDraggable(document.getElementById("bottom-slit_dragger"));
-    document.getElementById('lambda-slider').addEventListener('input', () => {
-        redraw();
-    });
-    document.getElementById("two-slits").addEventListener("mouseover", e => {
-        if ((e.target.id === "two-slits_obstacle" || e.target.id === "two-slits") && dragState === 0 || dragState === 1) {
-            document.getElementById("two-slits_obstacle").style.fill = "#828282";
-        } else {
-            document.getElementById("two-slits_obstacle").style.fill = "black";
-        }
-    });
-    document.getElementById("two-slits").addEventListener("mouseout", () => {
-        if (dragState !== 1) {
-            document.getElementById("two-slits_obstacle").style.fill = "black";
-        }
-    });
-    document.getElementById("top-slit_dragger").addEventListener("mouseover", () => {
-        if (dragState === 0 || dragState === 2) {
-            document.getElementById("top-slit_dragger").style.fill = "rgba(94, 182, 255, 0.66)";
-        }
-    });
-    document.getElementById("top-slit_dragger").addEventListener("mouseout", () => {
-        if (dragState === 0 || dragState === 2) {
-            document.getElementById("top-slit_dragger").style.fill = "rgba(0, 0, 0, 0)";
-        }
-    });
-    document.getElementById("bottom-slit_dragger").addEventListener("mouseover", () => {
-        if (dragState === 0 || dragState === 3) {
-            document.getElementById("bottom-slit_dragger").style.fill = "rgba(94, 182, 255, 0.66)";
-        }
-    });
-    document.getElementById("bottom-slit_dragger").addEventListener("mouseout", () => {
-        if (dragState === 0 || dragState === 3) {
-            document.getElementById("bottom-slit_dragger").style.fill = "rgba(0, 0, 0, 0)";
-        }
-    });
 });
+document.getElementById("top-slit_dragger").addEventListener("mouseover", () => {
+    if (dragState === 0 || dragState === 2) {
+        document.getElementById("top-slit_dragger").style.fill = "rgba(94, 182, 255, 0.66)";
+    }
+});
+document.getElementById("top-slit_dragger").addEventListener("mouseout", () => {
+    if (dragState === 0 || dragState === 2) {
+        document.getElementById("top-slit_dragger").style.fill = "rgba(0, 0, 0, 0)";
+    }
+});
+document.getElementById("bottom-slit_dragger").addEventListener("mouseover", () => {
+    if (dragState === 0 || dragState === 3) {
+        document.getElementById("bottom-slit_dragger").style.fill = "rgba(94, 182, 255, 0.66)";
+    }
+});
+document.getElementById("bottom-slit_dragger").addEventListener("mouseout", () => {
+    if (dragState === 0 || dragState === 3) {
+        document.getElementById("bottom-slit_dragger").style.fill = "rgba(0, 0, 0, 0)";
+    }
+});
+
 
 function makeDraggableHorizontally(element) {
     element.onmousedown = mouseDown;
@@ -81,18 +68,17 @@ function makeDraggableHorizontally(element) {
 }
 
 function drawInterferencePlot() {
-    let svg = document.getElementById('interference-graph');
+    const svg = document.getElementById('interference-graph');
     removeAllChildren(svg);
-    let amplitude = 100;
-    let rarity = 1;
-    let step = 0.5;
-    let center = getSlitsCenterRelativeToGraph();
-    let T = calculatePeriod(getL(), getD(), getLambda());
+    const amplitude = 100;
+    const step = 0.5;
+    const center = getSlitsCenterRelativeToGraph();
+    const T = calculatePeriod(getL(), getD(), getLambda());
     for (let i = -center; i <= (100 - center); i += step) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        line.setAttribute('y1', i + center * rarity);
+        line.setAttribute('y1', i + center);
         line.setAttribute('x1', Math.cos(Math.PI * i / T / ResScale) ** 2 * amplitude);
-        line.setAttribute('y2', (i + center + step) * rarity);
+        line.setAttribute('y2', i + center + step);
         line.setAttribute('x2', Math.cos(Math.PI * (i + step) / T / ResScale) ** 2 * amplitude);
         line.setAttribute('stroke', 'black');
         line.setAttribute('stroke-width', '0.7');
@@ -101,11 +87,11 @@ function drawInterferencePlot() {
 }
 
 function drawInterferencePattern() {
-    let svg = document.getElementById('interference-pattern');
+    const svg = document.getElementById('interference-pattern');
     removeAllChildren(svg);
-    let step = 0.5;
-    let center = getSlitsCenterRelativeToGraph();
-    let T = calculatePeriod(getL(), getD(), getLambda());
+    const step = 0.5;
+    const center = getSlitsCenterRelativeToGraph();
+    const T = calculatePeriod(getL(), getD(), getLambda());
     for (let i = -center; i <= 100 - center; i += step) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
         line.setAttribute('d', `M 0 ${i + center} h 100`);
@@ -153,10 +139,10 @@ function makeSlitDraggable(element) {
 }
 
 function drawCentralLine() {
-    let svg = document.getElementById('central-line');
+    const svg = document.getElementById('central-line');
     const twoSlits = document.getElementById('two-slits').getBoundingClientRect();
-    svg.style.left = `${twoSlits.right - 20 - document.getElementById('schemaBox').getBoundingClientRect().left - 2}`;
-    svg.style.top = `${getSlitsCenter()}`;
+    svg.style.left = twoSlits.right - 20 - document.getElementById('schemaBox').getBoundingClientRect().left - 2 + 'px';
+    svg.style.top = getSlitsCenter() + 'px';
     const width = document.getElementById('screen').getBoundingClientRect().left - twoSlits.right + 40; // half widths of screen + two-slits
     svg.setAttribute('width', width);
     document.getElementById('central-line__line').setAttribute('x2', width);
@@ -201,13 +187,13 @@ function redraw() {
 }
 
 function drawWaves() {
-    let wavesSvg = document.getElementById('waves');
-    let lsWavesSvg = document.getElementById('ls-waves');
-    let slitTop = document.getElementById('top-slit');
-    let slitBottom = document.getElementById('bottom-slit');
-    let twoSlits = document.getElementById('two-slits');
-    let ls = document.getElementById('light-source');
-    let screen = document.getElementById('screen');
+    const wavesSvg = document.getElementById('waves');
+    const lsWavesSvg = document.getElementById('ls-waves');
+    const slitTop = document.getElementById('top-slit');
+    const slitBottom = document.getElementById('bottom-slit');
+    const twoSlits = document.getElementById('two-slits');
+    const ls = document.getElementById('light-source');
+    const screen = document.getElementById('screen');
     removeAllChildren(wavesSvg);
     removeAllChildren(lsWavesSvg);
     wavesSvg.style.left = parseFloat(getComputedStyle(twoSlits).left) + 25 + 'px';
@@ -222,7 +208,7 @@ function drawWaves() {
         wave.setAttribute('d', `M ${waveSize - 10} ${parseFloat(slitTop.getAttribute("y")) + 4 - waveSize} q ${waveSize / 2} ${waveSize} 0 ${waveSize * 2}`);
         wave.setAttribute('fill', 'none');
         wave.setAttribute('opacity', '0.5');
-        wave.setAttribute("stroke", getColorByWavelength(wavelength));
+        wave.setAttribute('stroke', getColorByWavelength(wavelength));
         wavesSvg.appendChild(wave);
         const waveB = wave.cloneNode(true);
         waveB.setAttribute('d', `M ${waveSize - 10} ${parseFloat(slitBottom.getAttribute("y")) + 4 - waveSize} q ${waveSize / 2} ${waveSize} 0 ${waveSize * 2}`);
