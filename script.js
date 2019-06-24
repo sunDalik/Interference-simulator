@@ -106,6 +106,7 @@ function changeInfo() {
     document.getElementById("L").innerText = getL().toFixed(2) + " m";
     document.getElementById("d").innerText = (getD() * 10 ** 3).toFixed(2) + " mm";
     document.getElementById("lambda").innerText = getLambdaNM() + " nm";
+    document.getElementById("T").innerText = (calculatePeriod(getL(), getD(), getLambda()) * 10 ** 3).toFixed(3) + " mm";
 }
 
 function makeSlitDraggable(element) {
