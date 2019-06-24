@@ -57,11 +57,12 @@ function makeDraggableHorizontally(element) {
         if (e.target.id !== "top-slit_dragger" && e.target.id !== "bottom-slit_dragger") {
             dragState = 1;
 
+            const schemaBox = document.getElementById("schemaBox").getBoundingClientRect();
             const shiftL = e.clientX - element.getBoundingClientRect().left;
-            const rightEdge = document.getElementById("schemaBox").getBoundingClientRect().width - element.getBoundingClientRect().width;
+            const rightEdge = schemaBox.width - element.getBoundingClientRect().width;
             document.onmousemove = function (e) {
-                let newPositionL = e.clientX - shiftL - document.getElementById('schemaBox').getBoundingClientRect().left;
-                let newPositionR = document.getElementById('schemaBox').getBoundingClientRect().right - (e.clientX - shiftL + element.getBoundingClientRect().width);
+                let newPositionL = e.clientX - shiftL - schemaBox.left;
+                let newPositionR = schemaBox.right - (e.clientX - shiftL + element.getBoundingClientRect().width);
                 if (newPositionL < 40) {
                     newPositionL = 40;
                 }
@@ -153,9 +154,10 @@ function makeSlitDraggable(element) {
 
 function drawCentralLine() {
     let svg = document.getElementById('central-line');
-    svg.style.left = `${document.getElementById('two-slits').getBoundingClientRect().right - 20 - document.getElementById('schemaBox').getBoundingClientRect().left - 2}`;
+    const twoSlits = document.getElementById('two-slits').getBoundingClientRect();
+    svg.style.left = `${twoSlits.right - 20 - document.getElementById('schemaBox').getBoundingClientRect().left - 2}`;
     svg.style.top = `${getSlitsCenter()}`;
-    const width = document.getElementById('screen').getBoundingClientRect().left - document.getElementById('two-slits').getBoundingClientRect().right + 40; // half widths of screen + two-slits
+    const width = document.getElementById('screen').getBoundingClientRect().left - twoSlits.right + 40; // half widths of screen + two-slits
     svg.setAttribute('width', width);
     document.getElementById('central-line__line').setAttribute('x2', width);
 }
@@ -194,6 +196,7 @@ function redraw() {
     drawInterferencePlot();
     drawInterferencePattern();
     drawWaves();
+    drawNaturalLight();
     document.getElementById('lambda-slider').style.setProperty('--customBG', getColorByWavelength(getLambdaNM()));
 }
 
@@ -208,12 +211,13 @@ function drawWaves() {
     wavesSvg.setAttribute('width', screen.getBoundingClientRect().left - twoSlits.getBoundingClientRect().left - 5 + 'px');
     for (let i = 0; ; i++) {
         const wave = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        const waveSize = document.getElementById('lambda-slider').value / 10 * (i + 1);
+        const wavelength = document.getElementById('lambda-slider').value;
+        const waveSize = wavelength / 10 * (i + 1);
         if (waveSize > parseFloat(wavesSvg.getAttribute('width'))) break;
         wave.setAttribute('d', `M ${waveSize - 10} ${parseFloat(slitTop.getAttribute("y")) + 4 - waveSize} q ${waveSize / 2} ${waveSize} 0 ${waveSize * 2}`);
         wave.setAttribute('fill', 'none');
-        wave.setAttribute('opacity', '0.3');
-        wave.setAttribute("stroke", getColorByWavelength(document.getElementById('lambda-slider').value));
+        wave.setAttribute('opacity', '0.5');
+        wave.setAttribute("stroke", getColorByWavelength(wavelength));
         wavesSvg.appendChild(wave);
         const waveB = wave.cloneNode(true);
         waveB.setAttribute('d', `M ${waveSize - 10} ${parseFloat(slitBottom.getAttribute("y")) + 4 - waveSize} q ${waveSize / 2} ${waveSize} 0 ${waveSize * 2}`);
@@ -221,9 +225,16 @@ function drawWaves() {
     }
 }
 
+function drawNaturalLight() {
+    const lightSvg = document.getElementById('natural-light');
+    removeAllChildren(lightSvg);
+
+}
+
 function getSlitsCenter() {
-    return Math.floor((document.getElementById('top-slit_dragger').getBoundingClientRect().bottom - document.getElementById('schemaBox').getBoundingClientRect().top +
-        document.getElementById('bottom-slit_dragger').getBoundingClientRect().top - document.getElementById('schemaBox').getBoundingClientRect().top) / 2 - 1 - 2);
+    const topMargin = document.getElementById('schemaBox').getBoundingClientRect().top;
+    return Math.floor((document.getElementById('top-slit_dragger').getBoundingClientRect().bottom - topMargin +
+        document.getElementById('bottom-slit_dragger').getBoundingClientRect().top - topMargin) / 2 - 1 - 2);
 }
 
 function getSlitsCenterRelativeToGraph() {

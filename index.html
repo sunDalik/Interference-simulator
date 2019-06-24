@@ -10,6 +10,8 @@
 <body>
 <div class="simulation">
     <div id="schemaBox">
+        <svg xmlns="http://www.w3.org/2000/svg" id="natural-light" y="0" height="400px">
+        </svg>
         <svg xmlns="http://www.w3.org/2000/svg" id="light-source" width="50px" height="400px"
              viewBox="0 0 100 100" preserveAspectRatio="none">
             <path d="M 40,0 v 49 h 20 v -49 Z M 40,100 v -49 h 20 v 49 Z" fill="black"></path>
@@ -45,7 +47,7 @@
 <div class="info">
     <label>
         Adjust wavelength <br>
-        <input id="lambda-slider" type="range" class="customRange" min="380" max="780" value="666">
+        <input id="lambda-slider" type="range" class="customRange" min="380" max="780">
     </label>
     <div> L = <span id="L"></span></div>
     <div> d = <span id="d"></span></div>
