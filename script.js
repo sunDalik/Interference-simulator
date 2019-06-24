@@ -202,13 +202,18 @@ function redraw() {
 
 function drawWaves() {
     let wavesSvg = document.getElementById('waves');
+    let lsWavesSvg = document.getElementById('ls-waves');
     let slitTop = document.getElementById('top-slit');
     let slitBottom = document.getElementById('bottom-slit');
     let twoSlits = document.getElementById('two-slits');
+    let ls = document.getElementById('light-source');
     let screen = document.getElementById('screen');
     removeAllChildren(wavesSvg);
+    removeAllChildren(lsWavesSvg);
     wavesSvg.style.left = parseFloat(getComputedStyle(twoSlits).left) + 25 + 'px';
+    lsWavesSvg.style.left = parseFloat(getComputedStyle(ls).left) + 25 + 'px';
     wavesSvg.setAttribute('width', screen.getBoundingClientRect().left - twoSlits.getBoundingClientRect().left - 5 + 'px');
+    lsWavesSvg.setAttribute('width', twoSlits.getBoundingClientRect().left - ls.getBoundingClientRect().left - 5 + 'px');
     const wavelength = document.getElementById('lambda-slider').value;
     for (let i = 0; ; i++) {
         const wave = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -222,6 +227,9 @@ function drawWaves() {
         const waveB = wave.cloneNode(true);
         waveB.setAttribute('d', `M ${waveSize - 10} ${parseFloat(slitBottom.getAttribute("y")) + 4 - waveSize} q ${waveSize / 2} ${waveSize} 0 ${waveSize * 2}`);
         wavesSvg.appendChild(waveB);
+        const waveLs = wave.cloneNode(true);
+        waveLs.setAttribute('d', `M ${waveSize - 10} ${ls.getBoundingClientRect().height / 2 - waveSize} q ${waveSize / 2} ${waveSize} 0 ${waveSize * 2}`);
+        lsWavesSvg.appendChild(waveLs);
     }
 }
 
