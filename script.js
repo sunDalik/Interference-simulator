@@ -195,7 +195,23 @@ function redraw() {
     drawCentralLine();
     drawInterferencePlot();
     drawInterferencePattern();
+    drawWaves();
     document.getElementById('lambda-slider').style.setProperty('--customBG', getColorByWavelength(getLambdaNM()));
+}
+
+function drawWaves() {
+    let wavesTop = document.getElementById('waves_top');
+    let slitTop = document.getElementById('top-slit');
+    let twoSlits = document.getElementById('two-slits');
+    let screen = document.getElementById('screen');
+    removeAllChildren(wavesTop);
+    wavesTop.style.left = parseFloat(getComputedStyle(twoSlits).left) + twoSlits.getBoundingClientRect().width + 'px';
+    wavesTop.setAttribute('width', parseFloat(getComputedStyle(screen).left) - parseFloat(getComputedStyle(twoSlits).left) - screen.getBoundingClientRect().width / 2 + 'px');
+    const wave = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    wave.setAttribute("d", `M 0 ${parseFloat(slitTop.getAttribute("y")) + 4 - 50} q 25 50 -25 100`);
+    wave.setAttribute("fill", "none");
+    wave.setAttribute("stroke", "black");
+    wavesTop.appendChild(wave);
 }
 
 function getSlitsCenter() {
