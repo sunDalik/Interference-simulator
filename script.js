@@ -198,21 +198,26 @@ function redraw() {
 }
 
 function drawWaves() {
-    let wavesTop = document.getElementById('waves_top');
+    let wavesSvg = document.getElementById('waves');
     let slitTop = document.getElementById('top-slit');
+    let slitBottom = document.getElementById('bottom-slit');
     let twoSlits = document.getElementById('two-slits');
     let screen = document.getElementById('screen');
-    removeAllChildren(wavesTop);
-    wavesTop.style.left = parseFloat(getComputedStyle(twoSlits).left) + 25 + 'px';
-    wavesTop.setAttribute('width', screen.getBoundingClientRect().left - twoSlits.getBoundingClientRect().left - 5 + 'px');
+    removeAllChildren(wavesSvg);
+    wavesSvg.style.left = parseFloat(getComputedStyle(twoSlits).left) + 25 + 'px';
+    wavesSvg.setAttribute('width', screen.getBoundingClientRect().left - twoSlits.getBoundingClientRect().left - 5 + 'px');
     for (let i = 0; ; i++) {
         const wave = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        const waveSize = document.getElementById('lambda-slider').value / 11 + i * 50;
-        if (waveSize > parseFloat(wavesTop.getAttribute('width'))) break;
-        wave.setAttribute("d", `M ${waveSize} ${parseFloat(slitTop.getAttribute("y")) + 4 - waveSize} q ${waveSize / 2} ${waveSize} ${-waveSize / 2} ${waveSize * 3}`);
-        wave.setAttribute("fill", "none");
+        const waveSize = document.getElementById('lambda-slider').value / 10 * (i + 1);
+        if (waveSize > parseFloat(wavesSvg.getAttribute('width'))) break;
+        wave.setAttribute('d', `M ${waveSize - 10} ${parseFloat(slitTop.getAttribute("y")) + 4 - waveSize} q ${waveSize / 2} ${waveSize} 0 ${waveSize * 2}`);
+        wave.setAttribute('fill', 'none');
+        wave.setAttribute('opacity', '0.3');
         wave.setAttribute("stroke", getColorByWavelength(document.getElementById('lambda-slider').value));
-        wavesTop.appendChild(wave);
+        wavesSvg.appendChild(wave);
+        const waveB = wave.cloneNode(true);
+        waveB.setAttribute('d', `M ${waveSize - 10} ${parseFloat(slitBottom.getAttribute("y")) + 4 - waveSize} q ${waveSize / 2} ${waveSize} 0 ${waveSize * 2}`);
+        wavesSvg.appendChild(waveB);
     }
 }
 
