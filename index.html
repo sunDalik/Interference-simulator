@@ -10,15 +10,27 @@
 <body>
 <div class="simulation">
     <div id="schemaBox">
-        <svg xmlns="http://www.w3.org/2000/svg" id="natural-light" y="0" x="0" height="400px">
+        <svg xmlns="http://www.w3.org/2000/svg" id="natural-light" height="400px">
         </svg>
-        <svg xmlns="http://www.w3.org/2000/svg" id="ls-waves" y="0" height="400px">
+        <svg xmlns="http://www.w3.org/2000/svg" id="ls-waves" height="400px">
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" id="central-line" height="4px">
+            <line id="central-line__line" stroke-dasharray="20" stroke-width="4" x1="0" y1="2" x2="0" y2="2"
+                  stroke="gray"></line>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" id="L-line" height="22px">
+            <path id="L-line__line" stroke-width="2" fill="none" stroke="gray"></path>
+            <text id="L-line__text" y="11" stroke="gray">L</text>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" id="D-line" width="22px">
+            <path id="D-line__line" stroke-width="2" d="" fill="none" stroke="gray"></path>
+            <text id="D-line__text" x="10" stroke="gray">D</text>
         </svg>
         <svg xmlns="http://www.w3.org/2000/svg" id="light-source" width="50px" height="400px"
              viewBox="0 0 100 100" preserveAspectRatio="none">
             <path d="M 40,0 v 49 h 20 v -49 Z M 40,100 v -49 h 20 v 49 Z" fill="black"></path>
         </svg>
-        <svg xmlns="http://www.w3.org/2000/svg" id="waves" y="0" height="400px">
+        <svg xmlns="http://www.w3.org/2000/svg" id="waves" height="400px">
         </svg>
         <svg xmlns="http://www.w3.org/2000/svg" id="two-slits" width="50px" height="400px">
             <rect id="two-slits_obstacle" x="20" y="0" height="400" width="10" fill="black"></rect>
@@ -31,10 +43,6 @@
         <svg xmlns="http://www.w3.org/2000/svg" id="screen" width="50px" height="400px"
              viewBox="0 0 100 100" preserveAspectRatio="none">
             <path d="M 40,0 v 100 h 20 v -100 Z" fill="black"></path>
-        </svg>
-        <svg xmlns="http://www.w3.org/2000/svg" id="central-line" height="4px">
-            <line id="central-line__line" stroke-dasharray="20" stroke-width="4" x1="0" y1="2" x2="0" y2="2"
-                  stroke="gray"></line>
         </svg>
     </div>
     <div id="resultBox">

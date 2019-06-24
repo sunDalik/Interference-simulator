@@ -143,7 +143,7 @@ function drawCentralLine() {
     const twoSlits = document.getElementById('two-slits').getBoundingClientRect();
     svg.style.left = twoSlits.right - 20 - document.getElementById('schemaBox').getBoundingClientRect().left - 2 + 'px';
     svg.style.top = getSlitsCenter() + 'px';
-    const width = document.getElementById('screen').getBoundingClientRect().left - twoSlits.right + 40; // half widths of screen + two-slits
+    const width = document.getElementById('screen').getBoundingClientRect().left - twoSlits.left;
     svg.setAttribute('width', width);
     document.getElementById('central-line__line').setAttribute('x2', width);
 }
@@ -183,6 +183,8 @@ function redraw() {
     drawInterferencePattern();
     drawWaves();
     drawNaturalLight();
+    drawLLine();
+    drawDLine();
     document.getElementById('lambda-slider').style.setProperty('--customBG', getColorByWavelength(getLambdaNM()));
 }
 
@@ -233,6 +235,21 @@ function drawNaturalLight() {
         line.setAttribute("stroke", getColorByWavelength(wavelength));
         lightSvg.appendChild(line);
     }
+}
+
+function drawLLine() {
+    const svg = document.getElementById('L-line');
+    const path = document.getElementById('L-line__line');
+    const twoSlits = document.getElementById('two-slits').getBoundingClientRect();
+    const width = document.getElementById('screen').getBoundingClientRect().left - twoSlits.left - 10;
+    svg.setAttribute('width', width);
+    svg.style.left = twoSlits.left + 30 - document.getElementById('schemaBox').getBoundingClientRect().left - 2 + 'px';
+    path.setAttribute('d', `M 0 17 l 5 -5 m -5 5 l 5 5 m -5 -5 h ${width} l -5 -5 m 5 5 l -5 5`);
+    document.getElementById('L-line__text').setAttribute('x', width / 2);
+}
+
+function drawDLine() {
+
 }
 
 function getSlitsCenter() {

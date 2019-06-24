@@ -13,10 +13,6 @@ body {
     margin-top: 60px;
 }
 
-.simulation svg {
-    cursor: move;
-}
-
 #schemaBox {
     border: 2px solid black;
     position: absolute;
@@ -35,14 +31,17 @@ body {
 }
 
 #light-source {
+    cursor: move;
     left: 5vw;
 }
 
 #two-slits, #two-slits_draggers {
     left: 20vw;
+    cursor: move;
 }
 
 #screen {
+    cursor: move;
     left: 45vw;
 }
 
@@ -60,4 +59,8 @@ body {
 
 .info {
     margin-top: 500px;
+}
+
+#L-line {
+    top: 360px;
 }
