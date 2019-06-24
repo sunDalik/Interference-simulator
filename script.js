@@ -128,7 +128,7 @@ function makeSlitDraggable(element) {
     function mouseDown(e) {
         dragState = element.id === "top-slit_dragger" ? 2 : 3;
         const shiftT = Number(element.getAttribute('cy')) - e.clientY;
-        const bottomEdge = document.getElementById("schemaBox").getBoundingClientRect().height;
+        const bottomEdge = 400;
         document.onmousemove = function (e) {
             let NewPosition = e.clientY + shiftT;
             if (NewPosition < 40) {
@@ -153,9 +153,9 @@ function makeSlitDraggable(element) {
 
 function drawCentralLine() {
     let svg = document.getElementById('central-line');
-    svg.style.left = `${document.getElementById('two-slits').getBoundingClientRect().right - document.getElementById('two-slits').getBoundingClientRect().width * 0.4 - document.getElementById('schemaBox').getBoundingClientRect().left - 2}`;
+    svg.style.left = `${document.getElementById('two-slits').getBoundingClientRect().right - 20 - document.getElementById('schemaBox').getBoundingClientRect().left - 2}`;
     svg.style.top = `${getSlitsCenter()}`;
-    const width = document.getElementById('screen').getBoundingClientRect().left - document.getElementById('two-slits').getBoundingClientRect().right + document.getElementById('two-slits').getBoundingClientRect().width * 0.4 + document.getElementById('screen').getBoundingClientRect().width * 0.4;
+    const width = document.getElementById('screen').getBoundingClientRect().left - document.getElementById('two-slits').getBoundingClientRect().right + 40; // half widths of screen + two-slits
     svg.setAttribute('width', width);
     document.getElementById('central-line__line').setAttribute('x2', width);
 }
@@ -166,9 +166,7 @@ function calculatePeriod(L, d, lambda) {
 
 function getL() {
     return (document.getElementById("screen").getBoundingClientRect().left -
-        document.getElementById("two-slits").getBoundingClientRect().right +
-        document.getElementById("two-slits").getBoundingClientRect().width * 0.4 +
-        document.getElementById("screen").getBoundingClientRect().width * 0.4) / LScale;
+        document.getElementById("two-slits").getBoundingClientRect().right + 40) / LScale;
 }
 
 function getD() {
@@ -205,13 +203,17 @@ function drawWaves() {
     let twoSlits = document.getElementById('two-slits');
     let screen = document.getElementById('screen');
     removeAllChildren(wavesTop);
-    wavesTop.style.left = parseFloat(getComputedStyle(twoSlits).left) + twoSlits.getBoundingClientRect().width + 'px';
-    wavesTop.setAttribute('width', parseFloat(getComputedStyle(screen).left) - parseFloat(getComputedStyle(twoSlits).left) - screen.getBoundingClientRect().width / 2 + 'px');
-    const wave = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    wave.setAttribute("d", `M 0 ${parseFloat(slitTop.getAttribute("y")) + 4 - 50} q 25 50 -25 100`);
-    wave.setAttribute("fill", "none");
-    wave.setAttribute("stroke", "black");
-    wavesTop.appendChild(wave);
+    wavesTop.style.left = parseFloat(getComputedStyle(twoSlits).left) + 25 + 'px';
+    wavesTop.setAttribute('width', screen.getBoundingClientRect().left - twoSlits.getBoundingClientRect().left - 5 + 'px');
+    for (let i = 0; ; i++) {
+        const wave = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        const waveSize = document.getElementById('lambda-slider').value / 11 + i * 50;
+        if (waveSize > parseFloat(wavesTop.getAttribute('width'))) break;
+        wave.setAttribute("d", `M ${waveSize} ${parseFloat(slitTop.getAttribute("y")) + 4 - waveSize} q ${waveSize / 2} ${waveSize} ${-waveSize / 2} ${waveSize * 3}`);
+        wave.setAttribute("fill", "none");
+        wave.setAttribute("stroke", getColorByWavelength(document.getElementById('lambda-slider').value));
+        wavesTop.appendChild(wave);
+    }
 }
 
 function getSlitsCenter() {
