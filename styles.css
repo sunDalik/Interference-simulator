@@ -59,7 +59,7 @@ body {
 .info {
     margin-top: 510px;
     font-size: 17px;
-    line-height: 23px;
+    line-height: 25px;
     margin-left: 30px;
 }
 
@@ -80,4 +80,8 @@ body {
 
 #n-div {
     margin-left: 80px;
+}
+
+#n-chooser {
+    border-radius: 6px;
 }

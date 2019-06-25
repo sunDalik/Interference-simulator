@@ -250,7 +250,7 @@ function drawNaturalLight() {
     removeAllChildren(lightSvg);
     const width = parseFloat(getComputedStyle(document.getElementById('light-source')).left) + 10;
     lightSvg.setAttribute('width', width + 'px');
-    const wavelength = document.getElementById('lambda-slider').value;
+    const wavelength = getLambdaNM();
     for (let i = 50; i <= 350; i += 50) {
         const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
         line.setAttribute('d', `M 0 ${i} h ${width} l -5 -5 m 5 5 l -5 5`);
