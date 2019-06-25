@@ -1,7 +1,7 @@
-let dragState = 0; // 1 if two-slits is being dragged; 2 if top-slit; 3 if bottom-slit; 0 if none
+let dragState = 0; // 2 if top-slit is being dragged; 3 if bottom-slit; 0 if none
 const LScale = 100; // px/m when measuring L. Divide by scale to get L in meters.
 const DScale = 10 ** 5 / 2; // px/m when measuring d.
-const ResScale = 10 ** 5 / 2; // px/m when displaying interference result.
+const ResScale = 10 ** 5 / 2; // px/m when displaying interference result. * 4 to get actual scale ._.
 
 makeDraggableHorizontally(document.getElementById("light-source"));
 makeDraggableHorizontally(document.getElementById("two-slits"));
@@ -42,14 +42,13 @@ function makeDraggableHorizontally(element) {
 
     function mouseDown(e) {
         if (e.target.id !== "top-slit_dragger" && e.target.id !== "bottom-slit_dragger") {
-            dragState = 1;
-
+            const elementBCR = element.getBoundingClientRect();
             const schemaBox = document.getElementById("schemaBox").getBoundingClientRect();
-            const shiftL = e.clientX - element.getBoundingClientRect().left;
-            const rightEdge = schemaBox.width - element.getBoundingClientRect().width;
+            const shiftL = e.clientX - elementBCR.left;
+            const rightEdge = schemaBox.width - elementBCR.width;
             document.onmousemove = function (e) {
                 let newPositionL = e.clientX - shiftL - schemaBox.left;
-                let newPositionR = schemaBox.right - (e.clientX - shiftL + element.getBoundingClientRect().width);
+                let newPositionR = schemaBox.right - (e.clientX - shiftL + elementBCR.width);
                 if (newPositionL < 40) {
                     newPositionL = 40;
                 }
