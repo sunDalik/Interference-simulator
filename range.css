@@ -4,7 +4,7 @@
     -webkit-appearance: none;
     width: 260px;
     margin: 7px 0;
-    --customBG: white
+    --customBG: #afdcff;
 }
 
 .customRange:focus {

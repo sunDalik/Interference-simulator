@@ -34,7 +34,14 @@ document.getElementById("bottom-slit_dragger").addEventListener("mouseout", () =
         document.getElementById("bottom-slit_dragger").style.fill = "rgba(0, 0, 0, 0)";
     }
 });
-
+document.getElementById("n-slider").addEventListener('input', () => {
+    document.getElementById('n-chooser').value = "0";
+    redraw();
+});
+document.getElementById("n-chooser").addEventListener('input', () => {
+    document.getElementById('n-slider').value = document.getElementById('n-chooser').value;
+    redraw();
+});
 
 function makeDraggableHorizontally(element) {
     element.onmousedown = mouseDown;
@@ -104,8 +111,10 @@ function drawInterferencePattern() {
 function changeInfo() {
     document.getElementById("L").innerText = getL().toFixed(2) + " m";
     document.getElementById("d").innerText = (getD() * 10 ** 3).toFixed(2) + " mm";
-    document.getElementById("lambda").innerText = getLambdaNM() + " nm";
+    document.getElementById("lambda").innerText = Math.round(getLambdaNMVacuum()) + " nm";
     document.getElementById("T").innerText = (calculatePeriod(getL(), getD(), getLambda()) * 10 ** 3).toFixed(3) + " mm";
+    document.getElementById('n').innerText = getN();
+    document.getElementById('lambda_n').innerText = Math.round(getLambdaNM()) + " nm";
 }
 
 function makeSlitDraggable(element) {
@@ -163,11 +172,19 @@ function getD() {
 }
 
 function getLambda() {
-    return document.getElementById('lambda-slider').value * 10 ** -9;
+    return document.getElementById('lambda-slider').value * 10 ** -9 / getN();
+}
+
+function getLambdaNMVacuum() {
+    return document.getElementById('lambda-slider').value;
+}
+
+function getN() {
+    return document.getElementById('n-slider').value;
 }
 
 function getLambdaNM() {
-    return document.getElementById('lambda-slider').value;
+    return document.getElementById('lambda-slider').value / getN();
 }
 
 function mouseUp() {
@@ -202,7 +219,7 @@ function drawWaves() {
     lsWavesSvg.style.left = parseFloat(getComputedStyle(ls).left) + 25 + 'px';
     wavesSvg.setAttribute('width', screen.getBoundingClientRect().left - twoSlits.getBoundingClientRect().left - 5 + 'px');
     lsWavesSvg.setAttribute('width', twoSlits.getBoundingClientRect().left - ls.getBoundingClientRect().left - 5 + 'px');
-    const wavelength = document.getElementById('lambda-slider').value;
+    const wavelength = getLambdaNM();
     for (let i = 0; ; i++) {
         const wave = document.createElementNS("http://www.w3.org/2000/svg", "path");
         const waveSize = wavelength / 10 * (i + 1);

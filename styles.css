@@ -72,3 +72,12 @@ body {
     top: 360px;
     user-select: none;
 }
+
+.flex-row {
+    display: flex;
+    justify-content: flex-start;
+}
+
+#n-div {
+    margin-left: 80px;
+}
