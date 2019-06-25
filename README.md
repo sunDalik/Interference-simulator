@@ -1,2 +1,0 @@
-# Interference-simulator
-Physics project
