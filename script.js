@@ -52,8 +52,8 @@ function makeDraggableHorizontally(element) {
                 if (newPositionL < 40) {
                     newPositionL = 40;
                 }
-                if (rightEdge - newPositionL < 40) {
-                    newPositionL = rightEdge - 40;
+                if (rightEdge - newPositionL < 20) {
+                    newPositionL = rightEdge - 20;
                 }
                 if (element.id === "light-source" && (newPositionR - parseFloat(getComputedStyle(document.getElementById("two-slits")).right)) > 75 ||
                     element.id === "two-slits" && (newPositionR - parseFloat(getComputedStyle(document.getElementById("screen")).right)) > 100 && (newPositionL - parseFloat(getComputedStyle(document.getElementById("light-source")).left)) > 75 ||
