@@ -35,7 +35,7 @@ document.getElementById("bottom-slit_dragger").addEventListener("mouseout", () =
     }
 });
 document.getElementById("n-slider").addEventListener('input', () => {
-    document.getElementById('n-chooser').value = "0";
+    document.getElementById('n-chooser').getElementsByTagName('option')[6].selected = 'selected';
     redraw();
 });
 document.getElementById("n-chooser").addEventListener('input', () => {
